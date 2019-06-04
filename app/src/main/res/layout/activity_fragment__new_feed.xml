@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment_NewFeed"
     android:background="#FF66FF">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="125dp"
+        android:layout_height="33dp"
+        android:text="Cập nhật Status"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="56dp" />
+
+    <EditText
+        android:id="@+id/etStatus"
+        android:layout_width="348dp"
+        android:layout_height="89dp"
+        android:layout_below="@id/tvStatus"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Bạn đang nghĩ gì =)))"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btnGui"
+        android:onClick="dangStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="147dp"
+        android:layout_below="@id/etStatus"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

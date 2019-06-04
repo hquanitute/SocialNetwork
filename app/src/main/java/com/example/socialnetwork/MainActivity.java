@@ -4,12 +4,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 
 import com.example.socialnetwork.Adapter.MainView;
 import com.example.socialnetwork.Fragment.Fragment_Chating;
 import com.example.socialnetwork.Fragment.Fragment_Friends;
 import com.example.socialnetwork.Fragment.Fragment_NewFeed;
+import com.example.socialnetwork.Objects.Post;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
@@ -40,5 +45,20 @@ public class MainActivity extends AppCompatActivity {
     private void showFragment() {
         tabLayout = findViewById(R.id.TabLayout);
         viewPager = findViewById(R.id.ViewPaper);
+    }
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference mDatabase = database.getReference("Post");
+    EditText et_status;
+    public void dangStatus(View view){
+        //Đăng 1 cái post lên
+//        et_status= this.findViewById(R.id.etStatus);
+//        String status=et_status.getText().toString();
+//        Post post= new Post();
+//        post.setAccount_name("Quan");
+//        post.setText(status);
+//        String id= mDatabase.push().getKey();
+//        post.setPost_id(id);
+//        mDatabase.child(id).setValue(post);
     }
 }
