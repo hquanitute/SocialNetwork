@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "965996379876",
+    "firebase_url": "https://social-network-14488.firebaseio.com",
+    "project_id": "social-network-14488",
+    "storage_bucket": "social-network-14488.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965996379876:android:a11cb8386456fc4a",
+        "android_client_info": {
+          "package_name": "com.example.socialnetwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965996379876-vvhsu3gk9qpa40ghfak7lkq3hhfiqt4d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVGc0-DJubIeYce1i7nHewDcLc8WcpRZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965996379876-vvhsu3gk9qpa40ghfak7lkq3hhfiqt4d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
