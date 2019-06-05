@@ -103,8 +103,9 @@ public class Fragment_NewFeed extends Fragment {
             Cursor cursor = getActivity().getContentResolver().query(imageUri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();
-            Toast.makeText(getContext(),cursor.getString(nameIndex),Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(),cursor.getString(nameIndex),Toast.LENGTH_LONG).show();
             imagename= cursor.getString(nameIndex);
+            imagename.substring(,imagename.length());
         }
     }
     public void uploadimage()
