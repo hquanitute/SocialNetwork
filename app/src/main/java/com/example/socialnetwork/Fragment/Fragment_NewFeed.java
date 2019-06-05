@@ -65,15 +65,21 @@ public class Fragment_NewFeed extends Fragment {
     }
 
 
-    public void pushPost(){
-        String status=et_status.getText().toString();
-        Post post= new Post();
+    public void pushPost() {
+        String status = et_status.getText().toString();
+        Post post = new Post();
         post.setAccount_name("Quan");
+        if(imageView.getDrawable()!=null){
+            post.setImage(imagename);
+            Toast.makeText(this.getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this.getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+        }
         post.setText(status);
-        String id= mDatabase.push().getKey();
+        String id = mDatabase.push().getKey();
         post.setPost_id(id);
         mDatabase.child(id).setValue(post);
-
+    }
     private void opengallery()
     {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
