@@ -75,12 +75,17 @@ public class Fragment_NewFeed extends Fragment {
         String status = et_status.getText().toString();
         Post post = new Post();
         post.setAccount_name("Quan");
+        if(imageView.getDrawable()!=null){
+            post.setImage(imagename);
+            Toast.makeText(this.getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this.getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+        }
         post.setText(status);
         String id = mDatabase.push().getKey();
         post.setPost_id(id);
         mDatabase.child(id).setValue(post);
         uploadimage();
-
     }
     private void opengallery()
     {
