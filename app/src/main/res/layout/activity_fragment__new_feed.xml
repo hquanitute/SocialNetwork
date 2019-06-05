@@ -26,7 +26,6 @@
 
     <Button
         android:id="@+id/btnGui"
-        android:onClick="dangStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button"
