@@ -47,18 +47,5 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.ViewPaper);
     }
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference mDatabase = database.getReference("Post");
-    EditText et_status;
-    public void dangStatus(View view){
-        //Đăng 1 cái post lên
-//        et_status= this.findViewById(R.id.etStatus);
-//        String status=et_status.getText().toString();
-//        Post post= new Post();
-//        post.setAccount_name("Quan");
-//        post.setText(status);
-//        String id= mDatabase.push().getKey();
-//        post.setPost_id(id);
-//        mDatabase.child(id).setValue(post);
-    }
+
 }

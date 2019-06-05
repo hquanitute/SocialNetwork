@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF66FF">
+    android:background="#fff"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="125dp"
         android:layout_height="33dp"
-        android:text="Cập nhật Status"
-        tools:layout_editor_absoluteX="50dp"
-        tools:layout_editor_absoluteY="56dp" />
+        android:text="Cập nhật Status" />
 
     <EditText
         android:id="@+id/etStatus"
         android:layout_width="348dp"
         android:layout_height="89dp"
-        android:layout_below="@id/tvStatus"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Bạn đang nghĩ gì =)))"
-        android:layout_centerHorizontal="true"/>
-
+        android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/btnGui"
-        android:onClick="dangStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="147dp"
-        android:layout_below="@id/etStatus"
-        android:layout_centerHorizontal="true"/>
+        android:text="Đăng" />
+
+    <Button
+        android:id="@+id/btnimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lv_ListStatus"/>
 
 
-</RelativeLayout>
+</LinearLayout>
