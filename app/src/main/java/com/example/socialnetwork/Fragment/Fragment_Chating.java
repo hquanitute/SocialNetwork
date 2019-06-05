@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.socialnetwork.Objects.Message;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,12 +24,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Fragment_Chating extends Fragment {
     View view;
-    TextView textView;
-    Button btnDangki;
+    TextView username;
+    EditText edt_Message;
+    ImageButton btnSend;
+    CircleImageView profile_image;
     FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     String userid;
     @Override
@@ -38,14 +44,21 @@ public class Fragment_Chating extends Fragment {
 
 
         connectView();
+        profile_image.setImageResource(R.mipmap.ic_launcher);
         firebaseAuth=FirebaseAuth.getInstance();
 //        userid="phucvo";
 //        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
 //        databaseReference= FirebaseDatabase.getInstance().getReference("User").child(userid);
-        btnDangki.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createUser("phuckv","123","vophuc3@gmail.com");
+                if(!edt_Message.getText().toString().equals("")){
+                    sendMessage("phucvo","quanoccho",edt_Message.getText().toString());
+
+                }
+                else {
+                    Toast.makeText(getContext(),"Nhập nội dung tin nhắn!",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -53,35 +66,57 @@ public class Fragment_Chating extends Fragment {
     }
 
     private void connectView() {
-        textView=view.findViewById(R.id.textView);
-        btnDangki=view.findViewById(R.id.btnDangki);
+        username=view.findViewById(R.id.tv_profile);
+        profile_image=view.findViewById(R.id.profile_image);
+        edt_Message=view.findViewById(R.id.edt_Message);
+        btnSend=view.findViewById(R.id.btnSend);
     }
 
-    public void createUser(final String username, String password, String email){
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    firebaseUser=firebaseAuth.getCurrentUser();
-                    String userid=firebaseUser.getUid();
-                    databaseReference=FirebaseDatabase.getInstance().getReference("Users").child(userid);
+    public void singin(){
 
-                    HashMap<String,String> hashMap=new HashMap<>();
-                    hashMap.put("id",userid);
-                    hashMap.put("username","phucvo");
-                    hashMap.put("imageURL","default");
+    }
 
-                    databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                textView.setText("Thanh cong!");
-                            }
+    public void sendMessage (String idSender,String idReceive, String _message){
+        databaseReference=FirebaseDatabase.getInstance().getReference();
+
+        Message message=new Message();
+        message.setIdReceiver(idReceive);
+        message.setIdSender(idSender);
+        message.setMessage(_message);
+
+        databaseReference.child("Chats").push().setValue(message);
+        edt_Message.setText("");
+
+    }
+
+    public void createUser(final String username, String email, String password){
+        firebaseAuth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+
+                            Toast.makeText(getContext(),"Thanh cong",Toast.LENGTH_LONG).show();
+
+                            FirebaseUser firebaseUser=firebaseAuth.getCurrentUser();
+
+                            assert firebaseUser != null;
+                            String userid=firebaseUser.getUid();
+
+                            databaseReference=FirebaseDatabase.getInstance().getReference("Users").child(userid);
+
+                            HashMap<String,String> hashMap=new HashMap<>();
+                            hashMap.put("id",userid);
+                            hashMap.put("account_name",username);
+                            hashMap.put("imageURL","default");
+
+                            databaseReference.setValue(hashMap);
                         }
-                    });
-                }
-            }
-        });
+                        else {
+                            Toast.makeText(getContext(),"That bai",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
 
