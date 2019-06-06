@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,11 @@ import android.widget.Toast;
 import com.example.socialnetwork.Adapter.StatusAdapter;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +44,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_NewFeed extends Fragment {
     View view;
@@ -53,6 +60,7 @@ public class Fragment_NewFeed extends Fragment {
     Button btnimage;
     private static final int PICK_IMAGE=100;
     Uri imageUri;
+    String Linkimage;
     private static String imagename;
     ListView lv_listStatus;
     ArrayList<Post> posts;
@@ -70,7 +78,7 @@ public class Fragment_NewFeed extends Fragment {
         btnPush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushPost();
+               uploadimage();
 	    }
 	});
         imageView=view.findViewById(R.id.imageView);
@@ -126,22 +134,7 @@ public class Fragment_NewFeed extends Fragment {
 
 
     public void pushPost() {
-        String status = et_status.getText().toString();
-        Post post = new Post();
-        post.setAccount_name("Quan");
-        if(imageView.getDrawable()!=null){
-            post.setImage(imagename);
-            Toast.makeText(this.getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this.getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
-        }
-        post.setText(status);
-        String id = mDatabase.push().getKey();
-        post.setPost_id(id);
-        mDatabase.child("Post").child(id).setValue(post);
-        if(imagename!=null){
-            uploadimage();
-        }
+
 
     }
     private void opengallery() {
@@ -159,9 +152,9 @@ public class Fragment_NewFeed extends Fragment {
             Cursor cursor = getActivity().getContentResolver().query(imageUri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();
-            //Toast.makeText(getContext(),cursor.getString(nameIndex),Toast.LENGTH_LONG).show();
             imagename= cursor.getString(nameIndex);
-            imagename.substring(,imagename.length());
+            imagename= imagename.substring(1,imagename.length()-4);
+           // Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
         }
     }
     public void uploadimage() {
@@ -171,23 +164,47 @@ public class Fragment_NewFeed extends Fragment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
-        StorageReference mountainsRef = storageRef.child(imagename);
-        UploadTask uploadTask = mountainsRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        final StorageReference mountainsRef = storageRef.child(imagename);
+        final UploadTask uploadTask = mountainsRef.putBytes(data);
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Toast.makeText(getContext(),"loi ",Toast.LENGTH_LONG).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-                Toast.makeText(getContext(),"thanh cong ",Toast.LENGTH_LONG).show();
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
 
+                // Continue with the task to get the download URL
+                return mountainsRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    Linkimage=downloadUri.toString();
+                   // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
+                    String status = et_status.getText().toString();
+                    Post post = new Post();
+                    post.setAccount_name("Quan");
+                    post.setText(status);
+                    String id = mDatabase.push().getKey();
+                    post.setPost_id(id);
+                if(imageView.getDrawable()!=null){
+                    post.setImage(Linkimage);
+                    Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                }
+                mDatabase.child("Post").child(id).setValue(post);
+                } else {
+                    // Handle failures
+                    // ...
+                }
             }
         });
 
+
+
     }
+
 }

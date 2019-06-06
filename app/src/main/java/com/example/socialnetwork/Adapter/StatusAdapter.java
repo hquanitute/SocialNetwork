@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,19 +44,33 @@ public class StatusAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView= inflater.inflate(layout,null);
-        TextView tv_name = convertView.findViewById(R.id.tv_NameAccount);
-        TextView tv_status = convertView.findViewById(R.id.tv_Content);
-        ImageView imageView= convertView.findViewById(R.id.imageView);
-
+        final ViewHolder viewHolder;
+        //LayoutInflater inflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (convertView==null)
+        {
+            convertView= LayoutInflater.from(context).inflate(R.layout.status_row,parent,false);
+            viewHolder = new ViewHolder();
+            viewHolder.tv_NameAccount = convertView.findViewById(R.id.tv_NameAccount);
+            viewHolder.tv_Content  = convertView.findViewById(R.id.tv_Content);
+            viewHolder.imageView = convertView.findViewById(R.id.imageView);
+            convertView.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         Post post = posts.get(position);
-        tv_name.setText(post.getAccount_name());
-        tv_status.setText(post.getText());
-//        if(post.getImage()!=null){
-//            imageView.setVisibility(View.VISIBLE);
-//            imageView.setImageDrawable("Kha làm ở đây");
-//        }
+        viewHolder.tv_NameAccount.setText(post.getAccount_name());
+        viewHolder.tv_Content.setText(post.getText());
+        if(post.getImage()!=""){
+            viewHolder.imageView.setVisibility(View.VISIBLE);
+            //imageView.setImageDrawable("Kha làm ở đây");
+            Picasso.with(context).load(post.getImage().toString()).into(viewHolder.imageView);
+        }
         return convertView;
+    }
+    public class ViewHolder {
+        TextView tv_NameAccount,tv_Content;
+        ImageView imageView;
+        Button btnLike,btnComment,btnShare;
     }
 }
