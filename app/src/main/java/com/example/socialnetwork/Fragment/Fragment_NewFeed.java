@@ -40,6 +40,7 @@ import java.util.List;
 
 
 public class Fragment_NewFeed extends Fragment {
+    String email,displayname;
     View view;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase ;
@@ -64,6 +65,8 @@ public class Fragment_NewFeed extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__new_feed, container, false);
 
+        email = getArguments().getString("email");
+        displayname = getArguments().getString("displayname");
         et_status= view.findViewById(R.id.etStatus);
         btnPush=view.findViewById(R.id.btnGui);
         btnPush.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +189,7 @@ public class Fragment_NewFeed extends Fragment {
                         // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
                         String status = et_status.getText().toString();
                         Post post = new Post();
-                        post.setAccount_name("Quan");
+                        post.setAccount_name(displayname);
                         post.setText(status);
                         String id = mDatabase.push().getKey();
                         post.setPost_id(id);
@@ -208,7 +211,7 @@ public class Fragment_NewFeed extends Fragment {
         {
             String status = et_status.getText().toString();
             Post post = new Post();
-            post.setAccount_name("Quan");
+            post.setAccount_name(displayname);
             post.setText(status);
             String id = mDatabase.push().getKey();
             post.setPost_id(id);

@@ -38,6 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Fragment_Chating extends Fragment {
     View view;
+    String email,displayname;
     TextView username;
     EditText edt_Message;
     ImageButton btnSend;
@@ -58,7 +59,8 @@ public class Fragment_Chating extends Fragment {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__chating, container, false);
-
+        email = getArguments().getString("email");
+        displayname = getArguments().getString("displayname");
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
