@@ -14,7 +14,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.socialnetwork.Adapter.MessageAdapter;
+import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Message;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,9 +43,13 @@ public class Fragment_Chating extends Fragment {
     ImageButton btnSend;
     CircleImageView profile_image;
     RecyclerView recyclerView;
+
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    FirebaseUser firebaseUser;
+
     String userid;
+    String s_username;
     List<Message> mMessage;
     MessageAdapter messageAdapter;
     @Override
@@ -56,15 +62,53 @@ public class Fragment_Chating extends Fragment {
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
-        firebaseAuth=FirebaseAuth.getInstance();
-//        userid="phucvo";
-//        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-//        databaseReference= FirebaseDatabase.getInstance().getReference("User").child(userid);
+
+        /*firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+            } else {
+                // No user is signed in.
+            }
+        });*/
+
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
+        userid=firebaseUser.getUid();
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Account account=snapshot.getValue(Account.class);
+                    if(account.getId().equals(userid)){
+                        s_username=account.getAccount_name();
+                        username.setText(s_username);
+                        if(account.getImageURL().equals("default")){
+                            profile_image.setImageResource(R.mipmap.ic_launcher);
+                        }
+                        else {
+                            Glide.with(getContext()).load(account.getImageURL()).into(profile_image);
+                        }
+                        readMessage(s_username,"quanoccho","default");
+                        return;
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!edt_Message.getText().toString().equals("")){
-                    sendMessage("phucvo","quanoccho",edt_Message.getText().toString());
+                    sendMessage(s_username,"quanoccho",edt_Message.getText().toString());
 
                 }
                 else {
@@ -72,7 +116,7 @@ public class Fragment_Chating extends Fragment {
                 }
             }
         });
-        readMessage("phucvo","quanoccho","default");
+
 
         return view;
     }

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
         mAuth = FirebaseAuth.getInstance();
         this.username = (EditText)this.findViewById(R.id.Username);
         this.password = (EditText)this.findViewById(R.id.Password);
@@ -44,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
     private void CheckLogin()
     {
         final String email = username.getText().toString();
         String pass = password.getText().toString();
+        mAuth.signOut();
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

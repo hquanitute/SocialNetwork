@@ -33,6 +33,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         if(mMessage.get(position).getIdSender().equals("phucvo")){
+            profile_Image="https://scontent.fhan4-1.fna.fbcdn.net/v/t1.0-9/58441097_1822231404589458_9130348894968872960_n.jpg?_nc_cat=100&_nc_oc=AQkYkWZI_Rt3N0EuMDms8G4WpOz6CWqLFuv83gN1Cjk4Qg9ct2g4Z5FBBAzfk1iow20&_nc_ht=scontent.fhan4-1.fna&oh=62a1bfb4a90b74df7b34b632baeb5315&oe=5D9B399C";
             return MSG_STATUS_RIGHT;
         } else {
             return MSG_STATUS_LEFT;
