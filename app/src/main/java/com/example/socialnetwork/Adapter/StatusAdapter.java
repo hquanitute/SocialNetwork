@@ -61,6 +61,7 @@ public class StatusAdapter extends BaseAdapter {
         Post post = posts.get(position);
         viewHolder.tv_NameAccount.setText(post.getAccount_name());
         viewHolder.tv_Content.setText(post.getText());
+        viewHolder.imageView.setImageResource(0);
         if(post.getImage()!=null){
             viewHolder.imageView.setVisibility(View.VISIBLE);
             //imageView.setImageDrawable("Kha làm ở đây");
