@@ -3,6 +3,8 @@ package com.example.socialnetwork.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.socialnetwork.Adapter.MessageAdapter;
 import com.example.socialnetwork.Objects.Message;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,10 +22,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -32,9 +40,12 @@ public class Fragment_Chating extends Fragment {
     EditText edt_Message;
     ImageButton btnSend;
     CircleImageView profile_image;
+    RecyclerView recyclerView;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     String userid;
+    List<Message> mMessage;
+    MessageAdapter messageAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +72,7 @@ public class Fragment_Chating extends Fragment {
                 }
             }
         });
+        readMessage("phucvo","quanoccho","default");
 
         return view;
     }
@@ -70,6 +82,11 @@ public class Fragment_Chating extends Fragment {
         profile_image=view.findViewById(R.id.profile_image);
         edt_Message=view.findViewById(R.id.edt_Message);
         btnSend=view.findViewById(R.id.btnSend);
+        recyclerView=view.findViewById(R.id.recycleview);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
     }
 
     public void singin(){
@@ -117,6 +134,32 @@ public class Fragment_Chating extends Fragment {
                         }
                     }
                 });
+    }
+
+    public void readMessage (final String myid, final String userid, final String profile_image){
+        mMessage=new ArrayList<>();
+        databaseReference=FirebaseDatabase.getInstance().getReference("Chats");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mMessage.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Message message=snapshot.getValue(Message.class);
+                    if(message.getIdReceiver().equals(myid) && message.getIdSender().equals(userid) ||
+                    message.getIdSender().equals(myid)&&message.getIdReceiver().equals(userid)){
+                        mMessage.add(message);
+                    }
+                    messageAdapter=new MessageAdapter(getContext(),mMessage,profile_image);
+                    recyclerView.setAdapter(messageAdapter);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

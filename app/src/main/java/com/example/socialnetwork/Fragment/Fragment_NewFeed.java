@@ -98,6 +98,9 @@ public class Fragment_NewFeed extends Fragment {
                     posts.add(0, dataSnapshot.getValue(Post.class));
                    // keyList.add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
+                    imageView.setImageResource(0);
+                    imageView.setVisibility(View.GONE);
+                    et_status.setText("");
             }
 
             @Override
@@ -131,7 +134,7 @@ public class Fragment_NewFeed extends Fragment {
 
     private void afterPostStatus(){
         // reset EditText and ImageView
-        imageView.setVisibility(View.GONE);
+        //.setVisibility(View.GONE);
     }
 
     private void opengallery() {
