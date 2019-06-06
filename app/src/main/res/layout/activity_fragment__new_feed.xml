@@ -16,27 +16,33 @@
     <EditText
         android:id="@+id/etStatus"
         android:layout_width="348dp"
-        android:layout_height="89dp"
+        android:layout_height="68dp"
+        android:layout_gravity="center"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Bạn đang nghĩ gì =)))"
-        android:layout_gravity="center"/>
+        android:inputType="textPersonName" />
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:visibility="gone"/>
-    <Button
-        android:id="@+id/btnGui"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đăng" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Image" />
+        <Button
+            android:id="@+id/btnimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image"/>
+        <Button
+            android:id="@+id/btnGui"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đăng"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <ListView
         android:layout_width="match_parent"

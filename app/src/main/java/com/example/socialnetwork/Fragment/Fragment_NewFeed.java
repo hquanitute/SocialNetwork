@@ -44,6 +44,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static android.support.constraint.Constraints.TAG;
@@ -65,20 +67,21 @@ public class Fragment_NewFeed extends Fragment {
     ListView lv_listStatus;
     ArrayList<Post> posts;
     StatusAdapter adapter;
-
+    List<String> keyList = new ArrayList<String>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__new_feed, container, false);
-        et_status= view.findViewById(R.id.etStatus);
 
+        et_status= view.findViewById(R.id.etStatus);
         btnPush=view.findViewById(R.id.btnGui);
         btnPush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                uploadimage();
+               afterPostStatus();
 	    }
 	});
         imageView=view.findViewById(R.id.imageView);
@@ -103,7 +106,8 @@ public class Fragment_NewFeed extends Fragment {
         mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    posts.add( dataSnapshot.getValue(Post.class));
+                    posts.add(0, dataSnapshot.getValue(Post.class));
+                    keyList.add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
             }
 
@@ -114,7 +118,10 @@ public class Fragment_NewFeed extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                int index = keyList.indexOf(dataSnapshot.getKey());
+                posts.remove( index);
+                keyList.remove(index);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -133,10 +140,11 @@ public class Fragment_NewFeed extends Fragment {
     }
 
 
-    public void pushPost() {
-
-
+    private void afterPostStatus(){
+        // reset EditText and ImageView
+        imageView.setVisibility(View.GONE);
     }
+
     private void opengallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery,PICK_IMAGE);
@@ -187,6 +195,7 @@ public class Fragment_NewFeed extends Fragment {
                     Post post = new Post();
                     post.setAccount_name("Quan");
                     post.setText(status);
+                    et_status.setText("");
                     String id = mDatabase.push().getKey();
                     post.setPost_id(id);
                 if(imageView.getDrawable()!=null){
