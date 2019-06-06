@@ -36,9 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment_NewFeed extends Fragment {
     View view;
@@ -57,20 +57,21 @@ public class Fragment_NewFeed extends Fragment {
     ListView lv_listStatus;
     ArrayList<Post> posts;
     StatusAdapter adapter;
-
+    List<String> keyList = new ArrayList<String>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__new_feed, container, false);
-        et_status= view.findViewById(R.id.etStatus);
 
+        et_status= view.findViewById(R.id.etStatus);
         btnPush=view.findViewById(R.id.btnGui);
         btnPush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                uploadimage();
+               afterPostStatus();
 	    }
 	});
         imageView=view.findViewById(R.id.imageView);
@@ -95,8 +96,12 @@ public class Fragment_NewFeed extends Fragment {
         mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    posts.add( dataSnapshot.getValue(Post.class));
+                    posts.add(0, dataSnapshot.getValue(Post.class));
+                    keyList.add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
+                    imageView.setImageResource(0);
+                    imageView.setVisibility(View.GONE);
+                    et_status.setText("");
             }
 
             @Override
@@ -106,7 +111,10 @@ public class Fragment_NewFeed extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                int index = keyList.indexOf(dataSnapshot.getKey());
+                posts.remove( index);
+                keyList.remove(index);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -125,10 +133,11 @@ public class Fragment_NewFeed extends Fragment {
     }
 
 
-    public void pushPost() {
-
-
+    private void afterPostStatus(){
+        // reset EditText and ImageView
+        //.setVisibility(View.GONE);
     }
+
     private void opengallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery,PICK_IMAGE);
@@ -150,53 +159,61 @@ public class Fragment_NewFeed extends Fragment {
         }
     }
     public void uploadimage() {
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        final StorageReference mountainsRef = storageRef.child(imagename);
-        final UploadTask uploadTask = mountainsRef.putBytes(data);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
+        if (imageView.getDrawable()!=null) {
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            final UploadTask uploadTask = mountainsRef.putBytes(data);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
                 }
-
-                // Continue with the task to get the download URL
-                return mountainsRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    Linkimage=downloadUri.toString();
-                   // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
-                    String status = et_status.getText().toString();
-                    Post post = new Post();
-                    post.setAccount_name("Quan");
-                    post.setText(status);
-                    String id = mDatabase.push().getKey();
-                    post.setPost_id(id);
-                if(imageView.getDrawable()!=null){
-                    post.setImage(Linkimage);
-                    Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Linkimage = downloadUri.toString();
+                        // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
+                        String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name("Quan");
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (imageView.getDrawable() != null) {
+                            post.setImage(Linkimage);
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
                 }
-                mDatabase.child("Post").child(id).setValue(post);
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
-
-
-
+            });
+        }
+        else
+        {
+            String status = et_status.getText().toString();
+            Post post = new Post();
+            post.setAccount_name("Quan");
+            post.setText(status);
+            String id = mDatabase.push().getKey();
+            post.setPost_id(id);
+            mDatabase.child("Post").child(id).setValue(post);
+        }
     }
-
 }
