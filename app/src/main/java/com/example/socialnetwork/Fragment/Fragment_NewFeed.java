@@ -1,5 +1,4 @@
-﻿package com.example.socialnetwork.Fragment;
-
+package com.example.socialnetwork.Fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.example.socialnetwork.Adapter.StatusAdapter;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
@@ -38,11 +36,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-import static android.support.constraint.Constraints.TAG;
 
 public class Fragment_NewFeed extends Fragment {
     View view;
@@ -101,7 +96,7 @@ public class Fragment_NewFeed extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     posts.add(0, dataSnapshot.getValue(Post.class));
-                    keyList.add(dataSnapshot.getKey());
+                   // keyList.add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
             }
 
@@ -112,10 +107,10 @@ public class Fragment_NewFeed extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                int index = keyList.indexOf(dataSnapshot.getKey());
+             /*   int index = keyList.indexOf(dataSnapshot.getKey());
                 posts.remove( index);
                 keyList.remove(index);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();*/
             }
 
             @Override
