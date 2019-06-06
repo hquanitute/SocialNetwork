@@ -150,50 +150,62 @@ public class Fragment_NewFeed extends Fragment {
         }
     }
     public void uploadimage() {
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        final StorageReference mountainsRef = storageRef.child(imagename);
-        final UploadTask uploadTask = mountainsRef.putBytes(data);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+        if (imageView.getDrawable()!=null) {
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            final UploadTask uploadTask = mountainsRef.putBytes(data);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
-                // Continue with the task to get the download URL
-                return mountainsRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    Linkimage=downloadUri.toString();
-                   // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
-                    String status = et_status.getText().toString();
-                    Post post = new Post();
-                    post.setAccount_name("Quan");
-                    post.setText(status);
-                    String id = mDatabase.push().getKey();
-                    post.setPost_id(id);
-                if(imageView.getDrawable()!=null){
-                    post.setImage(Linkimage);
-                    Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
                 }
-                mDatabase.child("Post").child(id).setValue(post);
-                } else {
-                    // Handle failures
-                    // ...
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Linkimage = downloadUri.toString();
+                        // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
+                        String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name("Quan");
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (imageView.getDrawable() != null) {
+                            post.setImage(Linkimage);
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+        {
+            String status = et_status.getText().toString();
+            Post post = new Post();
+            post.setAccount_name("Quan");
+            post.setText(status);
+            String id = mDatabase.push().getKey();
+            post.setPost_id(id);
+            mDatabase.child("Post").child(id).setValue(post);
+        }
 
 
 
