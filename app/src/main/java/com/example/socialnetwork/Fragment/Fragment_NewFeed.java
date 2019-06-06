@@ -1,7 +1,6 @@
-package com.example.socialnetwork.Fragment;
+﻿package com.example.socialnetwork.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,8 +12,6 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +27,6 @@ import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +36,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -166,54 +160,61 @@ public class Fragment_NewFeed extends Fragment {
         }
     }
     public void uploadimage() {
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        final StorageReference mountainsRef = storageRef.child(imagename);
-        final UploadTask uploadTask = mountainsRef.putBytes(data);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
+        if (imageView.getDrawable()!=null) {
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            final UploadTask uploadTask = mountainsRef.putBytes(data);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
                 }
-
-                // Continue with the task to get the download URL
-                return mountainsRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    Linkimage=downloadUri.toString();
-                   // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
-                    String status = et_status.getText().toString();
-                    Post post = new Post();
-                    post.setAccount_name("Quan");
-                    post.setText(status);
-                    et_status.setText("");
-                    String id = mDatabase.push().getKey();
-                    post.setPost_id(id);
-                if(imageView.getDrawable()!=null){
-                    post.setImage(Linkimage);
-                    Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Linkimage = downloadUri.toString();
+                        // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
+                        String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name("Quan");
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (imageView.getDrawable() != null) {
+                            post.setImage(Linkimage);
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
                 }
-                mDatabase.child("Post").child(id).setValue(post);
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
-
-
-
+            });
+        }
+        else
+        {
+            String status = et_status.getText().toString();
+            Post post = new Post();
+            post.setAccount_name("Quan");
+            post.setText(status);
+            String id = mDatabase.push().getKey();
+            post.setPost_id(id);
+            mDatabase.child("Post").child(id).setValue(post);
+        }
     }
-
 }
