@@ -153,7 +153,7 @@ public class Fragment_NewFeed extends Fragment {
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
-            imagename= imagename.substring(1,imagename.length()-4);
+            imagename= imagename.substring(0,imagename.length()-4);
            // Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
         }
     }

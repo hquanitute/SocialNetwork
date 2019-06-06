@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignUp extends AppCompatActivity {
     private EditText username;
@@ -27,6 +28,7 @@ public class SignUp extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         this.username = (EditText)this.findViewById(R.id.Username);
         this.password = (EditText)this.findViewById(R.id.Password);
         this.btnSignUp =(Button)this.findViewById(R.id.btnSignUp);

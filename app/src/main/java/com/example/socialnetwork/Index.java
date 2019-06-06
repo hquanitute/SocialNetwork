@@ -17,6 +17,10 @@ public class Index extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        Bundle extras = this.getIntent().getExtras();
+
+        String displayname = extras.getString("displayname");
+        String email  = extras.getString("email");
         showFragment();
         init();
     }
