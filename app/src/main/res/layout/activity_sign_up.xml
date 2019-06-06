@@ -63,8 +63,8 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:background="@drawable/btnlogin"
-            android:id="@+id/btnLogin"
-            android:text="Sign In"/>
+            android:id="@+id/btnSignUp"
+            android:text="Sign Up Now"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,28 +73,5 @@
             android:layout_marginTop="32dp"
             >
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="153dp"
-        android:gravity="center">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Don't have an account ?  "
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign Up Now"
-            android:onClick="SignUp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
     </LinearLayout>
 </RelativeLayout>
