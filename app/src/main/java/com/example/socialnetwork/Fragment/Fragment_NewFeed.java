@@ -99,7 +99,7 @@ public class Fragment_NewFeed extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     posts.add(0, dataSnapshot.getValue(Post.class));
-                   // keyList.add(dataSnapshot.getKey());
+                    keyList.add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
                     imageView.setImageResource(0);
                     imageView.setVisibility(View.GONE);
@@ -108,7 +108,9 @@ public class Fragment_NewFeed extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                int index = keyList.indexOf(dataSnapshot.getKey());
+                posts.set(index,dataSnapshot.getValue(Post.class));
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -129,7 +131,7 @@ public class Fragment_NewFeed extends Fragment {
 
             }
         });
-        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,posts);
+        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,posts,displayname);
         lv_listStatus.setAdapter(adapter);
         return view;
     }

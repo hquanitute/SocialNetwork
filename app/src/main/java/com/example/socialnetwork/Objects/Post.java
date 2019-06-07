@@ -1,6 +1,8 @@
 package com.example.socialnetwork.Objects;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Post {
     String post_id;
@@ -8,8 +10,19 @@ public class Post {
     String text;
     String image;
     Date posting_date;
+    List<Comment> comments;
+
+    public Post(String post_id, String account_name, String text, String image, Date posting_date, List<Comment> comments) {
+        this.post_id = post_id;
+        this.account_name = account_name;
+        this.text = text;
+        this.image = image;
+        this.posting_date = posting_date;
+        this.comments = comments;
+    }
 
     public Post() {
+        comments = new ArrayList<Comment>();
     }
 
     public Post(String post_id, String account_name, String text, String image, Date posting_date) {
@@ -18,6 +31,7 @@ public class Post {
         this.text = text;
         this.image = image;
         this.posting_date = posting_date;
+        comments = new ArrayList<Comment>();
     }
 
     public Date getPosting_date() {
@@ -58,5 +72,13 @@ public class Post {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
