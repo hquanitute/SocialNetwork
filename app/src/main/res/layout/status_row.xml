@@ -25,28 +25,32 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Like" />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/comments">
+        </ListView>
 
-        <Button
-            android:id="@+id/btnComment"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Comment" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Share" />
+            <EditText
+                android:id="@+id/et_comment"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:hint="Nhập bình luận"
+                android:minHeight="50dp" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnComment"
+                android:text="SEND"/>
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
