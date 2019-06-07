@@ -36,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -154,7 +155,9 @@ public class Fragment_NewFeed extends Fragment {
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
-           // Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
+            String mydate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+            Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
+
         }
     }
     public void uploadimage() {
