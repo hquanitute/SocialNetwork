@@ -17,7 +17,7 @@ import com.example.socialnetwork.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-
+import com.example.socialnetwork.Interface.EventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,13 +31,14 @@ public class StatusAdapter extends BaseAdapter {
     private CommentAdapter adapter;
     private String displayname;
     private DatabaseReference mDatabase;
+    EventListener listener;
 
-    public StatusAdapter(Context context, int layout, List<Post> posts,  String displayname) {
+    public StatusAdapter(Context context, int layout, List<Post> posts,EventListener listener) {
         this.context = context;
         this.layout = layout;
         this.posts = posts;
         this.adapter = adapter;
-        this.displayname = displayname;
+        this.listener = listener;
     }
 
     public StatusAdapter(Context context, int layout, List<Post> posts) {
@@ -62,7 +63,7 @@ public class StatusAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         //LayoutInflater inflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView==null)
@@ -75,8 +76,6 @@ public class StatusAdapter extends BaseAdapter {
             viewHolder.lv_comments= convertView.findViewById(R.id.comments);
             viewHolder.ed_comment=convertView.findViewById(R.id.et_comment);
             viewHolder.btnComment=convertView.findViewById(R.id.btnComment);
-
-
             convertView.setTag(viewHolder);
         }
         else {
@@ -90,15 +89,22 @@ public class StatusAdapter extends BaseAdapter {
             adapter = new CommentAdapter(context,R.layout.comment_row,post.getComments());
             viewHolder.lv_comments.setAdapter(adapter);
         }
+        else
+        {
+           // adapter.notifyDataSetChanged();
+            adapter = new CommentAdapter(context,R.layout.comment_row,post.getComments());
+            viewHolder.lv_comments.setAdapter(adapter);
+        }
         if(post.getImage()!=null){
             viewHolder.imageView.setVisibility(View.VISIBLE);
             //imageView.setImageDrawable("Kha làm ở đây");
-            Picasso.with(context).load(post.getImage().toString()).into(viewHolder.imageView);
+            Picasso.with(context).load(post.getImage()).into(viewHolder.imageView);
         }
         viewHolder.btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendComment(post,viewHolder.ed_comment.getText().toString(),displayname);
+                listener.sendComment(post,viewHolder.ed_comment.getText().toString(),position);
+                viewHolder.ed_comment.getText().clear();
             }
         });
         return convertView;
@@ -110,19 +116,5 @@ public class StatusAdapter extends BaseAdapter {
         EditText ed_comment;
         Button btnComment;
     }
-    private void sendComment(Post oldPost, String comment, String account_name){
-        mDatabase = FirebaseDatabase.getInstance().getReference("Post");
-        Date date = new Date();
-        Comment comment1 = new Comment(String.valueOf(System.currentTimeMillis()),account_name,oldPost.getPost_id(),date,comment);
-        if(oldPost.getComments()!=null){
-            oldPost.getComments().add(comment1);
-        }
-        else {
-            //code dài dòng
-            List<Comment> comments = new ArrayList<Comment>();
-            comments.add(comment1);
-            oldPost.getComments().add(comment1);
-        }
-        mDatabase.child(oldPost.getPost_id()).setValue(oldPost);
-    }
+
 }

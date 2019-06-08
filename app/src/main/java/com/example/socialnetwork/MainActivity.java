@@ -67,15 +67,13 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(MainActivity.this,"Login Success !",Toast.LENGTH_LONG).show();
-                            if (task.getResult().getUser().getDisplayName()==null)
+                            if (user.getDisplayName()==null)
                             {
-
                                 String displayname = user.getEmail();
                                 displayname=displayname.substring(0,displayname.length()-10);
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(displayname)
                                         .build();
-
                                 user.updateProfile(profileUpdates)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

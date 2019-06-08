@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.example.socialnetwork.Adapter.StatusAdapter;
+import com.example.socialnetwork.Interface.EventListener;
+import com.example.socialnetwork.Objects.Comment;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.Continuation;
@@ -36,11 +38,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
-public class Fragment_NewFeed extends Fragment {
+public class Fragment_NewFeed extends Fragment implements EventListener {
     String email,displayname;
     View view;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,6 +61,7 @@ public class Fragment_NewFeed extends Fragment {
     ArrayList<Post> posts;
     StatusAdapter adapter;
     List<String> keyList = new ArrayList<String>();
+    private int vitri;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +113,7 @@ public class Fragment_NewFeed extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 int index = keyList.indexOf(dataSnapshot.getKey());
-                posts.set(index,dataSnapshot.getValue(Post.class));
+                posts.set(vitri,dataSnapshot.getValue(Post.class));
                 adapter.notifyDataSetChanged();
             }
 
@@ -132,9 +135,13 @@ public class Fragment_NewFeed extends Fragment {
 
             }
         });
-        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,posts,displayname);
-        lv_listStatus.setAdapter(adapter);
+        reset();
         return view;
+    }
+    private void reset()
+    {
+        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,posts,Fragment_NewFeed.this);
+        lv_listStatus.setAdapter(adapter);
     }
 
 
@@ -160,8 +167,7 @@ public class Fragment_NewFeed extends Fragment {
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
-            String mydate = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-            Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
 
         }
     }
@@ -220,7 +226,24 @@ public class Fragment_NewFeed extends Fragment {
             post.setText(status);
             String id = mDatabase.push().getKey();
             post.setPost_id(id);
+            post.setComments(null);
             mDatabase.child("Post").child(id).setValue(post);
         }
+    }
+    public void sendComment(Post oldPost, String comment,int position){
+        vitri=position;
+        mDatabase = FirebaseDatabase.getInstance().getReference("Post");
+        Date date = new Date();
+        Comment comment1 = new Comment(String.valueOf(System.currentTimeMillis()),displayname,oldPost.getPost_id(),date,comment);
+        if(oldPost.getComments()!=null){
+            oldPost.getComments().add(comment1);
+        }
+        else {
+            //code dài dòng
+            List<Comment> comments = new ArrayList<Comment>();
+            comments.add(comment1);
+            oldPost.getComments().addAll(comments);
+        }
+        mDatabase.child(oldPost.getPost_id()).setValue(oldPost);
     }
 }
