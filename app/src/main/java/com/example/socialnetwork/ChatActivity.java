@@ -1,5 +1,6 @@
 package com.example.socialnetwork;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,15 +55,20 @@ public class ChatActivity extends AppCompatActivity {
     List<Message> mMessage;
     MessageAdapter messageAdapter;
 
+    Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         connectView();
 
+        intent= getIntent();
+        receiverUsername=intent.getStringExtra("receiver");
+
         receiveAccount=new Account();
         senderAccount=new Account();
-        receiveAccount.setAccount_name("quanoccho");
+        receiveAccount.setAccount_name(receiverUsername);
         receiverUsername=receiveAccount.getAccount_name();
 
 
