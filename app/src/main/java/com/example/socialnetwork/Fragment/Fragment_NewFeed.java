@@ -68,7 +68,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__new_feed, container, false);
-
         email = getArguments().getString("email");
         displayname = getArguments().getString("displayname");
         et_status= view.findViewById(R.id.etStatus);
