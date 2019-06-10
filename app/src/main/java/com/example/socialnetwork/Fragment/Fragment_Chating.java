@@ -1,5 +1,4 @@
 package com.example.socialnetwork.Fragment;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -8,20 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.example.socialnetwork.Adapter.MessageAdapter;
+import com.example.socialnetwork.Adapter.UserMessageAdapter;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Message;
 import com.example.socialnetwork.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,10 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,10 +41,17 @@ public class Fragment_Chating extends Fragment {
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
 
-    String userid;
-    String s_username;
+    Account receiveAccount;
+    Account senderAccount;
+
+    List<Account> _account=new ArrayList<>();
+
+
+
+    String receiverUsername;
+
     List<Message> mMessage;
-    MessageAdapter messageAdapter;
+    UserMessageAdapter userMessageAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +60,10 @@ public class Fragment_Chating extends Fragment {
         view = inflater.inflate(R.layout.activity_fragment__chating, container, false);
         email = getArguments().getString("email");
         displayname = getArguments().getString("displayname");
+
+        //Test
+        receiveAccount=new Account();
+        receiveAccount.setAccount_name("quanoccho");
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
@@ -75,28 +78,33 @@ public class Fragment_Chating extends Fragment {
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         assert firebaseUser != null;
-        userid=firebaseUser.getUid();
+        final String userid=firebaseUser.getUid();
         databaseReference= FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Account account=snapshot.getValue(Account.class);
+                    _account.add(account);
                     if(account.getId().equals(userid)){
-                        s_username=account.getAccount_name();
-                        username.setText(s_username);
+                        senderAccount=account;
+                        username.setText(senderAccount.getAccount_name());
                         if(account.getImageURL().equals("default")){
                             profile_image.setImageResource(R.mipmap.ic_launcher);
                         }
                         else {
-                            Glide.with(getContext()).load(account.getImageURL()).into(profile_image);
+                            Glide.with(getContext()).load(senderAccount.getImageURL()).into(profile_image);
                         }
-                     //   readMessage(s_username,"quanoccho","default");
-                        return;
+
+
+                    }
+                    if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
+                        receiveAccount=account;
                     }
 
                 }
 
+                getMessage();
 
             }
 
@@ -105,41 +113,74 @@ public class Fragment_Chating extends Fragment {
 
             }
         });
+        return view;
+    }
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
+    private void getMessage() {
+        mMessage=new ArrayList<>();
+
+        databaseReference= FirebaseDatabase.getInstance().getReference("Chats");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                if(!edt_Message.getText().toString().equals("")){
-                    sendMessage(s_username,"quanoccho",edt_Message.getText().toString());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Message message=snapshot.getValue(Message.class);
+                    if(message.getIdSender().equals(senderAccount.getAccount_name()) || message.getIdReceiver().equals(senderAccount.getAccount_name())){
+                        mMessage.add(message);
+                    }
+                }
+                xulyMessage();
 
-                }
-                else {
-                    Toast.makeText(getContext(),"Nhập nội dung tin nhắn!",Toast.LENGTH_LONG).show();
-                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+    }
 
+    private void xulyMessage() {
+        List<Message> _message=new ArrayList<>();
+        ArrayList<ArrayList<Message>> lsMessage_User=new ArrayList<>();
+        for(Account _mAccount:_account){
+            ArrayList<Message> tempMessage=new ArrayList<>();
+            for(Message _mMessage:mMessage){
+                if(((_mMessage.getIdSender().equals(_mAccount.getAccount_name())&&_mMessage.getIdReceiver().equals(senderAccount.getAccount_name())) ||
+                        ( _mMessage.getIdReceiver().equals(_mAccount.getAccount_name())&&_mMessage.getIdSender().equals(senderAccount.getAccount_name())))
+                        &&!_mAccount.getAccount_name().equals(senderAccount.getAccount_name())){
+                    tempMessage.add(_mMessage);
+                }
+            }
+            if(tempMessage.size()!=0){
+                lsMessage_User.add(tempMessage);
+            }
 
-        return view;
+        }
+        for(ArrayList lstemp:lsMessage_User){
+            Message mstemp=(Message) lstemp.get(lstemp.size()-1);
+            _message.add(mstemp);
+
+        }
+        userMessageAdapter=new UserMessageAdapter(getContext(),_message,senderAccount,receiveAccount,_account);
+        recyclerView.setAdapter(userMessageAdapter);
     }
 
     private void connectView() {
         username=view.findViewById(R.id.tv_profile);
         profile_image=view.findViewById(R.id.profile_image);
-        edt_Message=view.findViewById(R.id.edt_Message);
-        btnSend=view.findViewById(R.id.btnSend);
-        recyclerView=view.findViewById(R.id.recycleview);
+
+        recyclerView=view.findViewById(R.id.userMessager_recycle);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    public void singin(){
+  /*  public void singin(){
 
-    }
+    }*/
 
-    public void sendMessage (String idSender,String idReceive, String _message){
+   /* public void sendMessage (String idSender,String idReceive, String _message){
         databaseReference=FirebaseDatabase.getInstance().getReference();
 
         Message message=new Message();
@@ -150,9 +191,9 @@ public class Fragment_Chating extends Fragment {
         databaseReference.child("Chats").push().setValue(message);
         edt_Message.setText("");
 
-    }
+    }*/
 
-    public void createUser(final String username, String email, String password){
+    /*public void createUser(final String username, String email, String password){
         firebaseAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -180,32 +221,9 @@ public class Fragment_Chating extends Fragment {
                         }
                     }
                 });
-    }
+    }*/
 
-   /* public void readMessage (final String myid, final String userid, final String profile_image){
-        mMessage=new ArrayList<>();
-        databaseReference=FirebaseDatabase.getInstance().getReference("Chats");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mMessage.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Message message=snapshot.getValue(Message.class);
-                    if(message.getIdReceiver().equals(myid) && message.getIdSender().equals(userid) ||
-                    message.getIdSender().equals(myid)&&message.getIdReceiver().equals(userid)){
-                        mMessage.add(message);
-                    }
-                    messageAdapter=new MessageAdapter(getContext(),mMessage,profile_image);
-                    recyclerView.setAdapter(messageAdapter);
-                }
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
 
