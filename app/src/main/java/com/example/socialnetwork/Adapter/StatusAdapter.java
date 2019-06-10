@@ -1,3 +1,4 @@
+﻿package com.example.socialnetwork.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
