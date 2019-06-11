@@ -49,6 +49,7 @@ public class Fragment_Chating extends Fragment {
 
 
     String receiverUsername;
+    Boolean isViewShown=false;
 
     List<Message> mMessage;
     UserMessageAdapter userMessageAdapter;
@@ -61,20 +62,16 @@ public class Fragment_Chating extends Fragment {
         email = getArguments().getString("email");
         displayname = getArguments().getString("displayname");
 
+
+
         //Test
-        receiveAccount=new Account();
-        receiveAccount.setAccount_name("quanoccho");
+//        receiveAccount=new Account();
+//        receiveAccount.setAccount_name("quanoccho");
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
 
-        /*firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-            } else {
-                // No user is signed in.
-            }
-        });*/
+
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         assert firebaseUser != null;
@@ -98,9 +95,9 @@ public class Fragment_Chating extends Fragment {
 
 
                     }
-                    if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
+                  /*  if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
                         receiveAccount=account;
-                    }
+                    }*/
 
                 }
 
@@ -113,6 +110,9 @@ public class Fragment_Chating extends Fragment {
 
             }
         });
+        setUserVisibleHint(isViewShown);
+        isViewShown=true;
+
         return view;
     }
 
@@ -138,6 +138,17 @@ public class Fragment_Chating extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (getView() != null && isVisibleToUser) {
+            isViewShown = true; // fetchdata() contains logic to show data when page is selected mostly asynctask to fill the data
+            getMessage();
+
+        } else {
+            isViewShown = false;
+        }
     }
 
     private void xulyMessage() {
