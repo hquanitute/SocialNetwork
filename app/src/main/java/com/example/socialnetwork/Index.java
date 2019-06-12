@@ -2,19 +2,15 @@ package com.example.socialnetwork;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.example.socialnetwork.Adapter.MainView;
 import com.example.socialnetwork.Fragment.Fragment_Chating;
 import com.example.socialnetwork.Fragment.Fragment_Friends;
 import com.example.socialnetwork.Fragment.Fragment_NewFeed;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Index extends AppCompatActivity {

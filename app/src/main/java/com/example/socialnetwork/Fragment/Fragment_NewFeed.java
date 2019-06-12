@@ -40,12 +40,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
 public class Fragment_NewFeed extends Fragment implements EventListener {
     String email,displayname;
     View view;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase ;
     EditText et_status;
     Button btnPush;
@@ -97,7 +94,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             }
         });
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        posts= new ArrayList<>();
+        posts = new ArrayList<>();
         mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -111,7 +108,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                int index = keyList.indexOf(dataSnapshot.getKey());
+                //int index = keyList.indexOf(dataSnapshot.getKey());
                 posts.set(vitri,dataSnapshot.getValue(Post.class));
                 adapter.notifyDataSetChanged();
             }
