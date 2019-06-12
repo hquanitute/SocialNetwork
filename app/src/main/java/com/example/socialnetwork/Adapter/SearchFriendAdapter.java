@@ -61,10 +61,16 @@ public class SearchFriendAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        final ViewHolder viewHolder;
+        final ViewHolder viewHolder=new ViewHolder();
         friends= new ArrayList<>();
-        getdata(displayName);
         int flag=0;
+        getdata(displayName,position,flag,convertView,viewHolder,parent);
+
+
+        return convertView;
+    }
+
+    private void processAfterFetch(int position,int flag,View convertView,ViewHolder viewHolder,ViewGroup parent) {
         for (int i=0;i<friends.size();i++)
         {
             if (friends.get(i).getName_friend().equals(accounts.get(position).getAccount_name()))
@@ -74,7 +80,7 @@ public class SearchFriendAdapter extends BaseAdapter {
             }
         }
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+
 
             if(flag==0)
             {
@@ -113,20 +119,25 @@ public class SearchFriendAdapter extends BaseAdapter {
             //viewHolder.tvAvatar.setText(account.getId());
             viewHolder.tvName.setText(account.getAccount_name());
         }
-        return convertView;
     }
+
     private class ViewHolder {
         TextView tvAvatarsearch, tvNamesearch,tvAvatar,tvName;
         Button btnaddfriend;
     }
-    private void getdata(String displayName)
+    private void getdata(String displayName, final int position, final int flag, final View convertView, final ViewHolder viewHolder, final ViewGroup parent)
     {
         mDatabase.child("Friendship").child(displayName);
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 friends.clear();
-                friends.add(dataSnapshot.getValue(Friend.class));
+                for(DataSnapshot _dataSnapshot1:dataSnapshot.getChildren()){
+                    friends.add(_dataSnapshot1.getValue(Friend.class));
+                }
+
+                processAfterFetch(position,flag,convertView,viewHolder,parent);
+
             }
 
             @Override
