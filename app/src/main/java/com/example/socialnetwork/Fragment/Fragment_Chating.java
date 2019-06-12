@@ -44,11 +44,15 @@ public class Fragment_Chating extends Fragment {
     Account receiveAccount;
     Account senderAccount;
 
+
+
     List<Account> _account=new ArrayList<>();
 
 
 
     String receiverUsername;
+    private boolean isViewShown=false;
+    private boolean isStarted=false;
 
     List<Message> mMessage;
     UserMessageAdapter userMessageAdapter;
@@ -58,24 +62,33 @@ public class Fragment_Chating extends Fragment {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_fragment__chating, container, false);
+
+        isStarted=true;
+
         email = getArguments().getString("email");
         displayname = getArguments().getString("displayname");
-
-        //Test
-        receiveAccount=new Account();
-        receiveAccount.setAccount_name("quanoccho");
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
 
-        /*firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-            } else {
-                // No user is signed in.
-            }
-        });*/
+        if(isViewShown){
+            getData();
+        }
 
+     /*   setUserVisibleHint(isViewShown);
+        isViewShown=true;*/
+
+        return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        isStarted = false;
+    }
+
+    public void getData(){
+        _account.clear();
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         assert firebaseUser != null;
         final String userid=firebaseUser.getUid();
@@ -95,17 +108,13 @@ public class Fragment_Chating extends Fragment {
                         else {
                             Glide.with(getContext()).load(senderAccount.getImageURL()).into(profile_image);
                         }
-
-
                     }
-                    if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
+                  /*  if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
                         receiveAccount=account;
-                    }
+                    }*/
 
                 }
-
                 getMessage();
-
             }
 
             @Override
@@ -113,12 +122,11 @@ public class Fragment_Chating extends Fragment {
 
             }
         });
-        return view;
     }
 
     private void getMessage() {
         mMessage=new ArrayList<>();
-
+        mMessage.clear();
         databaseReference= FirebaseDatabase.getInstance().getReference("Chats");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,9 +148,22 @@ public class Fragment_Chating extends Fragment {
         });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isViewShown=isVisibleToUser;
+        if(isViewShown && isStarted){
+            mMessage.clear();
+            getData();
+        }
+
+    }
+
     private void xulyMessage() {
         List<Message> _message=new ArrayList<>();
         ArrayList<ArrayList<Message>> lsMessage_User=new ArrayList<>();
+        _message.clear();
+        lsMessage_User.clear();
         for(Account _mAccount:_account){
             ArrayList<Message> tempMessage=new ArrayList<>();
             for(Message _mMessage:mMessage){

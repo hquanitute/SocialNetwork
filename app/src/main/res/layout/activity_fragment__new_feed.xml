@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical">
-
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="125dp"
@@ -29,24 +28,34 @@
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnimage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/custom_icon_left"
+            android:background="@drawable/btnstatus"
+            android:layout_margin="10dp"
+            android:paddingLeft="10dp"
             android:text="Image"/>
         <Button
             android:id="@+id/btnGui"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btnstatus"
+            android:drawableLeft="@drawable/iconleft"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:layout_margin="10dp"
             android:text="Đăng"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/lv_ListStatus"/>
 
 

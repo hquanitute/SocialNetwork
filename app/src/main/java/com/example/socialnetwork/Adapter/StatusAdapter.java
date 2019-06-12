@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -114,7 +115,7 @@ public class StatusAdapter extends BaseAdapter {
         ImageView imageView;
         ListView lv_comments;
         EditText ed_comment;
-        Button btnComment;
+        ImageButton btnComment;
     }
 
 }

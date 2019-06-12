@@ -181,6 +181,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void readMessage (final String myid, final String receiverId){
         mMessage=new ArrayList<>();
+        mMessage.clear();
         databaseReference=FirebaseDatabase.getInstance().getReference("Chats");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
