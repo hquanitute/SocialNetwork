@@ -114,7 +114,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
 
             }
         });
-        friendAdapter = new FriendAdapter(getContext(),R.layout.row_friend,friends);
+        friendAdapter = new FriendAdapter(getContext(),R.layout.row_searchfriend,friends);
         lv_friend.setAdapter(friendAdapter);
         addfriend.addTextChangedListener(new TextWatcher() {
             @Override

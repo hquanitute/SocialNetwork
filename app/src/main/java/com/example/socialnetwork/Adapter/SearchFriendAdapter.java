@@ -64,7 +64,7 @@ public class SearchFriendAdapter extends BaseAdapter {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         final ViewHolder viewHolder;
-        getdata(displayName);
+        //getdata(displayName);
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
