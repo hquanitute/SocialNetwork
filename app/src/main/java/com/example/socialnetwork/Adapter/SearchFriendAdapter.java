@@ -30,15 +30,16 @@ public class SearchFriendAdapter extends BaseAdapter {
     private List<Account> accounts;
     String displayName;
     DatabaseReference mDatabase ;
-    ArrayList<Friend> friends= new ArrayList<>();
+    ArrayList<Friend> friends;
     EventListener listener;
     public SearchFriendAdapter() {
     }
 
-    public SearchFriendAdapter(Context context, int layout, List<Account> accounts,String displayName,EventListener listener) {
+    public SearchFriendAdapter(Context context, int layout, List<Account> accounts,ArrayList<Friend> friends,String displayName,EventListener listener) {
         this.context = context;
         this.layout = layout;
         this.accounts = accounts;
+        this.friends=friends;
         this.displayName=displayName;
         this.listener=listener;
     }
@@ -62,56 +63,42 @@ public class SearchFriendAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final ViewHolder viewHolder;
-        friends= new ArrayList<>();
         getdata(displayName);
-        int flag=0;
-        for (int i=0;i<friends.size();i++)
-        {
-            if (friends.get(i).getName_friend().equals(accounts.get(position).getAccount_name()))
-            {
-                flag=1;
-                break;
-            }
-        }
+
         if (convertView == null) {
             viewHolder = new ViewHolder();
+            convertView= LayoutInflater.from(context).inflate(R.layout.row_searchfriend,parent,false);
+            viewHolder.tvNamesearch=convertView.findViewById(R.id.tvNamesearch);
+            viewHolder.tvAvatarsearch=convertView.findViewById(R.id.tvAvatarsearch);
+            viewHolder.btnaddfriend=convertView.findViewById(R.id.btnaddfriend);
 
-            if(flag==0)
-            {
-                convertView= LayoutInflater.from(context).inflate(R.layout.row_searchfriend,parent,false);
-                viewHolder.tvNamesearch=convertView.findViewById(R.id.tvNamesearch);
-                viewHolder.tvAvatarsearch=convertView.findViewById(R.id.tvAvatarsearch);
-                viewHolder.btnaddfriend=convertView.findViewById(R.id.btnaddfriend);
-            }
-            else
-            {
-                convertView= LayoutInflater.from(context).inflate(R.layout.row_friend,parent,false);
-                viewHolder.tvAvatar=convertView.findViewById(R.id.tvAvatar);
-                viewHolder.tvName=convertView.findViewById(R.id.tvName);
-            }
-            convertView.setTag(viewHolder);
-        }
-        else
-        {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        if (flag==0)
-        {
             final Account account = accounts.get(position);
             viewHolder.tvAvatarsearch.setText(account.getId());
             viewHolder.tvNamesearch.setText(account.getAccount_name());
+            int flag=0;
+            for (int i=0;i<friends.size();i++)
+            {
+                if (friends.get(i).getName_friend().equals(accounts.get(position).getAccount_name()))
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1){
+                viewHolder.btnaddfriend.setVisibility(View.INVISIBLE);
+            }
             viewHolder.btnaddfriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.addfriend(account);
                 }
             });
+
+            convertView.setTag(viewHolder);
         }
         else
         {
-            Account account = accounts.get(position);
-            //viewHolder.tvAvatar.setText(account.getId());
-            viewHolder.tvName.setText(account.getAccount_name());
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         return convertView;
     }
@@ -121,12 +108,25 @@ public class SearchFriendAdapter extends BaseAdapter {
     }
     private void getdata(String displayName)
     {
-        mDatabase.child("Friendship").child(displayName);
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Friendship").child(displayName).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                friends.clear();
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 friends.add(dataSnapshot.getValue(Friend.class));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override

@@ -138,6 +138,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
                 if (s.equals(""))
                 {
                     lv_friend.setAdapter(friendAdapter);
+                    friendAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -146,7 +147,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
 
             }
         });
-        searchFriendAdapter = new SearchFriendAdapter(getContext(),R.layout.row_searchfriend,accteamp,displayname,Fragment_Friends.this);
+        searchFriendAdapter = new SearchFriendAdapter(getContext(),R.layout.row_searchfriend,accteamp,friends,displayname,Fragment_Friends.this);
 
         return view;
     }
