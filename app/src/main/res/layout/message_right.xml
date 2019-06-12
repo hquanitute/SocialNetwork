@@ -17,14 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/background_right"
+            android:background="@drawable/mes_right"
             android:layout_toRightOf="@+id/profile_image"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:text="Hello"
             android:textSize="20dp"
+            android:textColor="#FFFFFF"
             android:id="@+id/showmessage"
             android:padding="8dp"/>
 
     </RelativeLayout>
-
 </RelativeLayout>

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment_Chating"
-    android:background="#6699FF">
+    android:background="#FFFFFF">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout"
@@ -15,19 +14,20 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark">
+            android:background="#EEEEEE">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/profile_image"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_profile"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="35dp"
                 android:text="Username"
-                android:textColor="#fff"
+                android:textSize="20dp"
+                android:textColor="#000000"
                 android:textStyle="bold"/>
 
         </android.support.v7.widget.Toolbar>
@@ -40,6 +40,7 @@
         android:id="@+id/recycleview"
         android:layout_below="@+id/appbar_layout"
         android:layout_above="@+id/sendLayout"
+        android:background="#FFFFFF"
         />
 
     <RelativeLayout
@@ -48,22 +49,27 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="5dp"
-        android:background="#fff">
+        android:layout_margin="5dp"
+        android:background="@drawable/textcomment">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edt_Message"
-            android:hint="Nhập tin nhắn ..."
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:hint="  Nhập tin nhắn ..."
             android:layout_toLeftOf="@+id/btnSend"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            />
+
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
             android:id="@+id/btnSend"
+            android:layout_width="40dp"
+            android:layout_height="46dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_action_name"
-            />
+            android:layout_margin="5dp"
+            android:background="@drawable/send" />
 
     </RelativeLayout>
 
