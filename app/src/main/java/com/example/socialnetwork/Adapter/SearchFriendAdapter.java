@@ -101,18 +101,20 @@ public class SearchFriendAdapter extends BaseAdapter {
         {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        return convertView;
     }
 
     private class ViewHolder {
         TextView tvAvatarsearch, tvNamesearch,tvAvatar,tvName;
         Button btnaddfriend;
     }
-    private void getdata(String displayName, final int position, final int flag, final View convertView, final ViewHolder viewHolder, final ViewGroup parent)
+    private void getdata(String displayName)
     {
         mDatabase.child("Friendship").child(displayName).addChildEventListener(new ChildEventListener() {
             @Override
 
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                friends.clear();
                 friends.add(dataSnapshot.getValue(Friend.class));
             }
 
