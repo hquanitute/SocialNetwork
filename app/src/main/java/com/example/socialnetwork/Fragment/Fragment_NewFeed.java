@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.example.socialnetwork.Adapter.StatusAdapter;
 import com.example.socialnetwork.Interface.EventListener;
+import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Comment;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
@@ -241,5 +242,10 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             oldPost.getComments().addAll(comments);
         }
         mDatabase.child(oldPost.getPost_id()).setValue(oldPost);
+    }
+
+    @Override
+    public void addfriend(Account account) {
+
     }
 }

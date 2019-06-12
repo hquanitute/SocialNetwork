@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private void CheckLogin()
     {
 
-        final String email = username.getText().toString();
-        String pass = password.getText().toString();
+        /*final String email = username.getText().toString();*/
+        String email ="quangkhait98@gmail.com";
+              //  String pass = password.getText().toString();
+        String pass="quangkhamarsuga";
         mAuth.signOut();
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
