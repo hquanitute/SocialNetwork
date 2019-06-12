@@ -64,7 +64,7 @@ public class SearchFriendAdapter extends BaseAdapter {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         final ViewHolder viewHolder;
-        getdata(displayName);
+      //  getdata(displayName);
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -99,7 +99,7 @@ public class SearchFriendAdapter extends BaseAdapter {
         }
         else
         {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder=(ViewHolder)convertView.getTag();
         }
         return convertView;
     }
@@ -108,7 +108,7 @@ public class SearchFriendAdapter extends BaseAdapter {
         TextView tvAvatarsearch, tvNamesearch,tvAvatar,tvName;
         Button btnaddfriend;
     }
-    private void getdata(String displayName)
+   /* private void getdata(String displayName)
     {
         mDatabase.child("Friendship").child(displayName).addChildEventListener(new ChildEventListener() {
             @Override
@@ -138,5 +138,5 @@ public class SearchFriendAdapter extends BaseAdapter {
 
             }
         });
-    }
+    }*/
 }

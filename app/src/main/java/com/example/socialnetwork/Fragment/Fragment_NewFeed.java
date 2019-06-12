@@ -24,6 +24,7 @@ import com.example.socialnetwork.Adapter.StatusAdapter;
 import com.example.socialnetwork.Interface.EventListener;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Comment;
+import com.example.socialnetwork.Objects.Friend;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
 import com.google.android.gms.tasks.Continuation;
@@ -60,6 +61,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     StatusAdapter adapter;
     List<String> keyList = new ArrayList<String>();
     private int vitri;
+    ArrayList<Friend> friends;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 opengallery();
             }
         });
-
+        friends= new ArrayList<>();
         //Hien thi danh sach status
         lv_listStatus= view.findViewById(R.id.lv_ListStatus);
         lv_listStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,12 +101,18 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
         mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    posts.add(0, dataSnapshot.getValue(Post.class));
-                    keyList.add(dataSnapshot.getKey());
-                    adapter.notifyDataSetChanged();
-                    imageView.setImageResource(0);
-                    imageView.setVisibility(View.GONE);
-                    et_status.setText("");
+                for (int i=0;i<friends.size();i++)
+                {
+                    if(dataSnapshot.getValue(Post.class).getAccount_name().equals(friends.get(i).getName_friend()))
+                    {
+                        posts.add(0, dataSnapshot.getValue(Post.class));
+                        keyList.add(dataSnapshot.getKey());
+                        adapter.notifyDataSetChanged();
+                        imageView.setImageResource(0);
+                        imageView.setVisibility(View.GONE);
+                        et_status.setText("");
+                    }
+                }
             }
 
             @Override
@@ -132,6 +140,35 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
             }
         });
+        mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                friends.add(dataSnapshot.getValue(Friend.class));
+                Toast.makeText(getContext(),"aaaa",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         reset();
         return view;
     }
@@ -242,6 +279,8 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             oldPost.getComments().addAll(comments);
         }
         mDatabase.child(oldPost.getPost_id()).setValue(oldPost);
+        adapter.notifyDataSetChanged();
+      //  lv_listStatus.setAdapter(adapter);
     }
 
     @Override

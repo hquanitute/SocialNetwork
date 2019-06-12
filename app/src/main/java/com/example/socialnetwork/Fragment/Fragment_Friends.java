@@ -166,5 +166,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
         friend.setName_friend(account.getAccount_name());
         mDatabase.child("Friendship").child(displayname).child(id).setValue(friend);
         friendAdapter.notifyDataSetChanged();
+        lv_friend.setAdapter(friendAdapter);
+        addfriend.setText("");
     }
 }

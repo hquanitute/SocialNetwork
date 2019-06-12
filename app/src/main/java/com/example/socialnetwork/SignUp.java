@@ -71,11 +71,8 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-
                             //Toast.makeText(getContext(),"Thanh cong",Toast.LENGTH_LONG).show();
-
                             FirebaseUser firebaseUser=mAuth.getCurrentUser();
-
                             assert firebaseUser != null;
                             String userid=firebaseUser.getUid();
                             //Code cua Quan
@@ -88,8 +85,9 @@ public class SignUp extends AppCompatActivity {
                             hashMap.put("id",userid);
                             hashMap.put("account_name",displayname);
                             hashMap.put("imageURL","default");
-
                             databaseReference.setValue(hashMap);
+
+                            //databaseReference=FirebaseDatabase.getInstance().getReference("Friendship").child(userid);
                         }
                         else {
                             //Toast.makeText(getContext(),"That bai",Toast.LENGTH_LONG).show();
