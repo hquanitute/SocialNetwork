@@ -49,7 +49,7 @@ public class Fragment_Chating extends Fragment {
 
 
     String receiverUsername;
-    Boolean isViewShown=false;
+    private boolean isViewShown=false;
 
     List<Message> mMessage;
     UserMessageAdapter userMessageAdapter;
@@ -70,9 +70,14 @@ public class Fragment_Chating extends Fragment {
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
+        getData();
+        setUserVisibleHint(isViewShown);
+        isViewShown=true;
 
+        return view;
+    }
 
-
+    private void getData(){
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         assert firebaseUser != null;
         final String userid=firebaseUser.getUid();
@@ -92,17 +97,13 @@ public class Fragment_Chating extends Fragment {
                         else {
                             Glide.with(getContext()).load(senderAccount.getImageURL()).into(profile_image);
                         }
-
-
                     }
                   /*  if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
                         receiveAccount=account;
                     }*/
 
                 }
-
                 getMessage();
-
             }
 
             @Override
@@ -110,10 +111,6 @@ public class Fragment_Chating extends Fragment {
 
             }
         });
-        setUserVisibleHint(isViewShown);
-        isViewShown=true;
-
-        return view;
     }
 
     private void getMessage() {
@@ -144,7 +141,6 @@ public class Fragment_Chating extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (getView() != null && isVisibleToUser) {
             isViewShown = true; // fetchdata() contains logic to show data when page is selected mostly asynctask to fill the data
-            getMessage();
 
         } else {
             isViewShown = false;
