@@ -66,6 +66,8 @@ public class SearchFriendAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
       //  getdata(displayName);
 
+
+
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView= LayoutInflater.from(context).inflate(R.layout.row_searchfriend,parent,false);
