@@ -42,11 +42,11 @@ public class StatusAdapter extends BaseAdapter {
         this.listener = listener;
     }
 
-    public StatusAdapter(Context context, int layout, List<Post> posts) {
+   /* public StatusAdapter(Context context, int layout, List<Post> posts) {
         this.context = context;
         this.layout = layout;
         this.posts = posts;
-    }
+    }*/
 
     @Override
     public int getCount() {

@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import com.example.socialnetwork.Adapter.FriendAdapter;
 import com.example.socialnetwork.Adapter.SearchFriendAdapter;
+import com.example.socialnetwork.Interface.EventListener;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Friend;
+import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment_Friends extends Fragment {
+public class Fragment_Friends extends Fragment implements EventListener {
     View view;
     String email,displayname;
     ListView lv_friend;
@@ -84,7 +86,7 @@ public class Fragment_Friends extends Fragment {
 
             }
         });
-        mDatabase.child("Friendship").child("quangkhait98").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 friends.add(dataSnapshot.getValue(Friend.class));
@@ -112,7 +114,7 @@ public class Fragment_Friends extends Fragment {
 
             }
         });
-        friendAdapter = new FriendAdapter(getContext(),R.layout.row_friend,friends);
+        friendAdapter = new FriendAdapter(getContext(),R.layout.row_searchfriend,friends);
         lv_friend.setAdapter(friendAdapter);
         addfriend.addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,6 +135,11 @@ public class Fragment_Friends extends Fragment {
                     }
                 }
                 lv_friend.setAdapter(searchFriendAdapter);
+                if (s.equals(""))
+                {
+                    lv_friend.setAdapter(friendAdapter);
+                    friendAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -140,9 +147,26 @@ public class Fragment_Friends extends Fragment {
 
             }
         });
-        searchFriendAdapter = new SearchFriendAdapter(getContext(),R.layout.row_searchfriend,accteamp,displayname);
+        searchFriendAdapter = new SearchFriendAdapter(getContext(),R.layout.row_searchfriend,accteamp,friends,displayname,Fragment_Friends.this);
 
         return view;
     }
 
+    @Override
+    public void sendComment(Post oldPost, String comment, int position) {
+
+    }
+
+    @Override
+    public void addfriend(Account account) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String id = mDatabase.push().getKey();
+        Friend friend = new Friend();
+        friend.setIdfriend(id);
+        friend.setName_friend(account.getAccount_name());
+        mDatabase.child("Friendship").child(displayname).child(id).setValue(friend);
+        friendAdapter.notifyDataSetChanged();
+        lv_friend.setAdapter(friendAdapter);
+        addfriend.setText("");
+    }
 }

@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
     private void CheckLogin()
     {
-
         final String email = username.getText().toString();
         String pass = password.getText().toString();
         mAuth.signOut();

@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.socialnetwork.Interface.EventListener;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Friend;
 import com.example.socialnetwork.R;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +30,18 @@ public class SearchFriendAdapter extends BaseAdapter {
     private List<Account> accounts;
     String displayName;
     DatabaseReference mDatabase ;
-    ArrayList<Friend> friends= new ArrayList<>();
-
+    ArrayList<Friend> friends;
+    EventListener listener;
     public SearchFriendAdapter() {
     }
 
-    public SearchFriendAdapter(Context context, int layout, List<Account> accounts,String displayName) {
+    public SearchFriendAdapter(Context context, int layout, List<Account> accounts,ArrayList<Friend> friends,String displayName,EventListener listener) {
         this.context = context;
         this.layout = layout;
         this.accounts = accounts;
+        this.friends=friends;
         this.displayName=displayName;
+        this.listener=listener;
     }
 
     @Override
@@ -58,66 +62,62 @@ public class SearchFriendAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         final ViewHolder viewHolder;
-        getdata(displayName);
-        int flag=0;
-        for (int i=0;i<friends.size();i++)
-        {
-            if (friends.get(i).getName_friend().equals(accounts.get(position)))
-            {
-                flag=1;
-                break;
-            }
-        }
+      //  getdata(displayName);
+
+
+
         if (convertView == null) {
             viewHolder = new ViewHolder();
+            convertView= LayoutInflater.from(context).inflate(R.layout.row_searchfriend,parent,false);
+            viewHolder.tvNamesearch=convertView.findViewById(R.id.tvNamesearch);
+            viewHolder.tvAvatarsearch=convertView.findViewById(R.id.tvAvatarsearch);
+            viewHolder.btnaddfriend=convertView.findViewById(R.id.btnaddfriend);
 
-            if(flag==0)
+            final Account account = accounts.get(position);
+            viewHolder.tvAvatarsearch.setText(account.getId());
+            viewHolder.tvNamesearch.setText(account.getAccount_name());
+            int flag=0;
+            for (int i=0;i<friends.size();i++)
             {
-                convertView= LayoutInflater.from(context).inflate(R.layout.row_searchfriend,parent,false);
-                viewHolder.tvNamesearch=convertView.findViewById(R.id.tvNamesearch);
-                viewHolder.tvAvatarsearch=convertView.findViewById(R.id.tvAvatarsearch);
-                viewHolder.btnaddfriend=convertView.findViewById(R.id.btnaddfriend);
+                if (friends.get(i).getName_friend().equals(accounts.get(position).getAccount_name()))
+                {
+                    flag=1;
+                    break;
+                }
             }
-            else
-            {
-                convertView= LayoutInflater.from(context).inflate(R.layout.row_friend,parent,false);
-                viewHolder.tvAvatar=convertView.findViewById(R.id.tvAvatar);
-                viewHolder.tvName=convertView.findViewById(R.id.tvName);
+            if(flag==1){
+                viewHolder.btnaddfriend.setVisibility(View.INVISIBLE);
             }
+            viewHolder.btnaddfriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.addfriend(account);
+                }
+            });
+
             convertView.setTag(viewHolder);
         }
         else
         {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder=(ViewHolder)convertView.getTag();
         }
-        if (flag==0)
-        {
-            Account account = accounts.get(position);
-            viewHolder.tvAvatarsearch.setText(account.getId());
-            viewHolder.tvNamesearch.setText(account.getAccount_name());
-        }
-        else
-        {
-            Account account = accounts.get(position);
-            viewHolder.tvAvatar.setText(account.getId());
-            viewHolder.tvName.setText(account.getAccount_name());
-        }
-
-
         return convertView;
     }
+
     private class ViewHolder {
         TextView tvAvatarsearch, tvNamesearch,tvAvatar,tvName;
         Button btnaddfriend;
     }
-    private void getdata(String displayName)
+   /* private void getdata(String displayName)
     {
-        mDatabase.child("Friendship").child("quangkhait98").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Friendship").child(displayName).addChildEventListener(new ChildEventListener() {
             @Override
+
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                friends.clear();
                 friends.add(dataSnapshot.getValue(Friend.class));
-                //keyList.add(dataSnapshot.getKey());
             }
 
             @Override
@@ -140,5 +140,5 @@ public class SearchFriendAdapter extends BaseAdapter {
 
             }
         });
-    }
+    }*/
 }
