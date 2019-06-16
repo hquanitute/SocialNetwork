@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -50,12 +52,16 @@ public class ChatActivity extends AppCompatActivity {
     TextView username;
     EditText edt_Message;
     ImageButton btnSend;
+    ImageButton btnImageSend;
     CircleImageView profile_image;
     RecyclerView recyclerView;
+    ImageView imageView;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
 
     Account receiveAccount;
     Account senderAccount;
@@ -63,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     String receiverUsername;
+    String Linkimage;
 
     List<Message> mMessage;
     MessageAdapter messageAdapter;
@@ -122,6 +129,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        btnImageSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opengallery();
+            }
+        });
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +154,8 @@ public class ChatActivity extends AppCompatActivity {
         profile_image=findViewById(R.id.profile_image);
         edt_Message=findViewById(R.id.edt_Message);
         btnSend=findViewById(R.id.btnSend);
+        btnImageSend=findViewById(R.id.btnImageSend);
+        imageView=findViewById(R.id.imageView);
         recyclerView=findViewById(R.id.recycleview);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
@@ -151,18 +167,10 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    public void sendMessage (String idSender,String idReceive, String _message){
-        databaseReference=FirebaseDatabase.getInstance().getReference();
+    /*public void sendMessage (String idSender,String idReceive, String _message){
 
-        Message message=new Message();
-        message.setIdReceiver(idReceive);
-        message.setIdSender(idSender);
-        message.setMessage(_message);
 
-        databaseReference.child("Chats").push().setValue(message);
-        edt_Message.setText("");
-
-    }
+    }*/
 
     public void createUser(final String username, String email, String password){
         firebaseAuth.createUserWithEmailAndPassword(email,password)
@@ -222,7 +230,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    /*private void opengallery() {
+    private void opengallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery,PICK_IMAGE);
     }
@@ -234,7 +242,7 @@ public class ChatActivity extends AppCompatActivity {
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
             imageView.setVisibility(View.VISIBLE);
-            Cursor cursor = getActivity().getContentResolver().query(imageUri, null, null, null, null);
+            Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
@@ -243,7 +251,8 @@ public class ChatActivity extends AppCompatActivity {
 
         }
     }
-    public void uploadimage() {
+
+    public void sendMessage(final String idSender, final String idReceive, final String _message) {
         if (imageView.getDrawable()!=null) {
             imageView.setDrawingCacheEnabled(true);
             imageView.buildDrawingCache();
@@ -269,8 +278,23 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         Linkimage = downloadUri.toString();
+
+                        databaseReference=FirebaseDatabase.getInstance().getReference();
+
+                        Message message=new Message();
+                        message.setIdReceiver(idReceive);
+                        message.setIdSender(idSender);
+                        message.setMessage(_message);
+                        message.setImage(Linkimage);
+
+
+                        databaseReference.child("Chats").push().setValue(message);
+                        edt_Message.setText("");
+                        imageView.setVisibility(View.GONE);
+                        imageView.setImageDrawable(null);
+
                         // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
-                        String status = et_status.getText().toString();
+                        /*String status = et_status.getText().toString();
                         Post post = new Post();
                         post.setAccount_name(displayname);
                         post.setText(status);
@@ -282,7 +306,7 @@ public class ChatActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
                         }
-                        mDatabase.child("Post").child(id).setValue(post);
+                        mDatabase.child("Post").child(id).setValue(post);*/
                     } else {
                         // Handle failures
                         // ...
@@ -292,14 +316,27 @@ public class ChatActivity extends AppCompatActivity {
         }
         else
         {
-            String status = et_status.getText().toString();
+            databaseReference=FirebaseDatabase.getInstance().getReference();
+
+            Message message=new Message();
+            message.setIdReceiver(idReceive);
+            message.setIdSender(idSender);
+            message.setMessage(_message);
+            message.setImage("default");
+
+
+            databaseReference.child("Chats").push().setValue(message);
+            edt_Message.setText("");
+            imageView.setVisibility(View.GONE);
+
+           /* String status = et_status.getText().toString();
             Post post = new Post();
             post.setAccount_name(displayname);
             post.setText(status);
             String id = mDatabase.push().getKey();
             post.setPost_id(id);
             post.setComments(null);
-            mDatabase.child("Post").child(id).setValue(post);
+            mDatabase.child("Post").child(id).setValue(post);*/
         }
-    }*/
+    }
 }

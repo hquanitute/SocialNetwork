@@ -53,16 +53,34 @@
         android:padding="5dp"
         android:layout_margin="5dp"
         android:background="@drawable/textcomment">
+        <ImageButton
+            android:id="@+id/btnImageSend"
+            android:layout_width="46dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/image"
+            android:layout_height="46dp" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_toRightOf="@+id/btnImageSend"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/btnImageSend"
             android:id="@+id/edt_Message"
             android:textSize="20sp"
             android:textColor="#000000"
+
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_toRightOf="@+id/btnImageSend"
             android:hint="  Nhập tin nhắn ..."
             android:layout_toLeftOf="@+id/btnSend"
             android:layout_centerVertical="true"
             />
+
 
         <ImageButton
             android:id="@+id/btnSend"

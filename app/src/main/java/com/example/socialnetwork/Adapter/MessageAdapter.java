@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -83,6 +84,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             else {
                 Glide.with(mContext).load(sender.getImageURL()).into(viewHolder.profile_Image);
             }
+            if(!message.getImage().equals("default")){
+                Glide.with(mContext).load(message.getImage()).into(viewHolder.imageView);
+                viewHolder.imageView.setVisibility(View.VISIBLE);
+            }
         }
         else{
             if(receive.getImageURL().equals("default")){
@@ -90,6 +95,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else {
                 Glide.with(mContext).load(receive.getImageURL()).into(viewHolder.profile_Image);
+            }
+            if(!message.getImage().equals("default")){
+                Glide.with(mContext).load(message.getImage()).into(viewHolder.imageView);
+                viewHolder.imageView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -101,12 +110,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         CircleImageView profile_Image;
         TextView tvMessage;
+        ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profile_Image=itemView.findViewById(R.id.profile_image);
             tvMessage=itemView.findViewById(R.id.showmessage);
+            imageView=itemView.findViewById(R.id.imageView);
         }
     }
 }

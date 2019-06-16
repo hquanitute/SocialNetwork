@@ -6,6 +6,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:id="@+id/layoutRight"
         android:padding="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -26,5 +27,15 @@
             android:id="@+id/showmessage"
             android:padding="8dp"/>
 
+
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/layoutRight"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"/>
+
 </RelativeLayout>

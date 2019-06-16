@@ -4,14 +4,24 @@ public class Message {
     String idSender;
     String idReceiver;
     String message;
+    String image;
 
     public Message() {
     }
 
-    public Message(String idSender, String idReceiver, String message) {
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Message(String idSender, String idReceiver, String message, String image) {
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.message = message;
+        this.image=image;
     }
 
     public String getIdSender() {
