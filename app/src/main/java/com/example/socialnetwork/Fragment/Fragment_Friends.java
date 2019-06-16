@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
     EditText addfriend;
     ArrayList<Account> accteamp;
     SearchFriendAdapter searchFriendAdapter;
+    boolean ignoreChange = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,26 +61,14 @@ public class Fragment_Friends extends Fragment implements EventListener {
         friends = new ArrayList<>();
         accounts = new ArrayList<>();
         accteamp = new ArrayList<>();
-        mDatabase.child("Users").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                accounts.add(0,dataSnapshot.getValue(Account.class));
-                keyList.add(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                accounts.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                    accounts.add(0, snapshot.getValue(Account.class));
+                    keyList.add(snapshot.getKey());
+                }
             }
 
             @Override
@@ -86,27 +76,15 @@ public class Fragment_Friends extends Fragment implements EventListener {
 
             }
         });
-        mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Friendship").child(displayname).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                friends.add(dataSnapshot.getValue(Friend.class));
-                //keyList.add(dataSnapshot.getKey());
-                friendAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                friends.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                    friends.add(snapshot.getValue(Friend.class));
+                    //keyList.add(dataSnapshot.getKey());
+                    friendAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -125,21 +103,24 @@ public class Fragment_Friends extends Fragment implements EventListener {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                accteamp.clear();
-                for (int i=0;i<accounts.size();i++)
-                {
-                    if (accounts.get(i).getAccount_name().toLowerCase().contains(s.toString().toLowerCase()))
-                    {
-                        accteamp.add(accounts.get(i));
-                        searchFriendAdapter.notifyDataSetChanged();
-                        //Toast.makeText(getContext(),"aaaaaaaa",Toast.LENGTH_LONG).show();
-                    }
-                }
-                lv_friend.setAdapter(searchFriendAdapter);
-                if (s.equals(""))
-                {
-                    lv_friend.setAdapter(friendAdapter);
-                    friendAdapter.notifyDataSetChanged();
-                }
+               if (s.length()==0)
+               {
+                   friendAdapter.notifyDataSetChanged();
+                   lv_friend.setAdapter(friendAdapter);
+               }
+               else
+               {
+                   for (int i=0;i<accounts.size();i++)
+                   {
+                       if (accounts.get(i).getAccount_name().toLowerCase().contains(s.toString().toLowerCase()))
+                       {
+                           accteamp.add(accounts.get(i));
+                           searchFriendAdapter.notifyDataSetChanged();
+                           //Toast.makeText(getContext(),"aaaaaaaa",Toast.LENGTH_LONG).show();
+                       }
+                   }
+                   lv_friend.setAdapter(searchFriendAdapter);
+               }
             }
 
             @Override

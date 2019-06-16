@@ -1,6 +1,7 @@
 package com.example.socialnetwork.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.socialnetwork.Objects.Comment;
 import com.example.socialnetwork.Objects.Post;
@@ -66,7 +69,6 @@ public class StatusAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        //LayoutInflater inflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView==null)
         {
             convertView= LayoutInflater.from(context).inflate(R.layout.status_row,parent,false);
@@ -77,6 +79,7 @@ public class StatusAdapter extends BaseAdapter {
             viewHolder.lv_comments= convertView.findViewById(R.id.comments);
             viewHolder.ed_comment=convertView.findViewById(R.id.et_comment);
             viewHolder.btnComment=convertView.findViewById(R.id.btnComment);
+            viewHolder.videoView=convertView.findViewById(R.id.videoView);
             convertView.setTag(viewHolder);
         }
         else {
@@ -101,6 +104,12 @@ public class StatusAdapter extends BaseAdapter {
             //imageView.setImageDrawable("Kha làm ở đây");
             Picasso.with(context).load(post.getImage()).into(viewHolder.imageView);
         }
+        if(post.getVideo()!=null){
+            viewHolder.videoView.setVisibility(View.VISIBLE);
+            //imageView.setImageDrawable("Kha làm ở đây");
+           viewHolder.videoView.setVideoPath(post.getVideo());
+           viewHolder.videoView.setMediaController(new MediaController(context));
+        }
         viewHolder.btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +125,7 @@ public class StatusAdapter extends BaseAdapter {
         ListView lv_comments;
         EditText ed_comment;
         ImageButton btnComment;
+        VideoView videoView;
     }
 
 }
