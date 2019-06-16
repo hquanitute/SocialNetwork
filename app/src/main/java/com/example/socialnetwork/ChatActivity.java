@@ -1,6 +1,13 @@
 package com.example.socialnetwork;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.example.socialnetwork.Adapter.MessageAdapter;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Message;
+import com.example.socialnetwork.Objects.Post;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,7 +35,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +68,9 @@ public class ChatActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
 
     Intent intent;
+    private static final int PICK_IMAGE=100;
+    private static String imagename;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,4 +220,86 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    /*private void opengallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery,PICK_IMAGE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
+        {
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+            imageView.setVisibility(View.VISIBLE);
+            Cursor cursor = getActivity().getContentResolver().query(imageUri, null, null, null, null);
+            int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            cursor.moveToFirst();
+            imagename= cursor.getString(nameIndex);
+            imagename= imagename.substring(0,imagename.length()-4);
+            //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
+
+        }
+    }
+    public void uploadimage() {
+        if (imageView.getDrawable()!=null) {
+            imageView.setDrawingCacheEnabled(true);
+            imageView.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            final UploadTask uploadTask = mountainsRef.putBytes(data);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Linkimage = downloadUri.toString();
+                        // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
+                        String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name(displayname);
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (imageView.getDrawable() != null) {
+                            post.setImage(Linkimage);
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                }
+            });
+        }
+        else
+        {
+            String status = et_status.getText().toString();
+            Post post = new Post();
+            post.setAccount_name(displayname);
+            post.setText(status);
+            String id = mDatabase.push().getKey();
+            post.setPost_id(id);
+            post.setComments(null);
+            mDatabase.child("Post").child(id).setValue(post);
+        }
+    }*/
 }

@@ -74,9 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-
        Message message=mMessage.get(i);
-
         viewHolder.tvMessage.setText(message.getMessage());
         if(message.getIdSender().equals(sender.getAccount_name())){
             if(sender.getImageURL().equals("default")){
@@ -94,17 +92,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 Glide.with(mContext).load(receive.getImageURL()).into(viewHolder.profile_Image);
             }
         }
-
-
-
-
     }
-
     @Override
     public int getItemCount() {
         return mMessage.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         CircleImageView profile_Image;
@@ -115,8 +107,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             profile_Image=itemView.findViewById(R.id.profile_image);
             tvMessage=itemView.findViewById(R.id.showmessage);
-
-
         }
     }
 }

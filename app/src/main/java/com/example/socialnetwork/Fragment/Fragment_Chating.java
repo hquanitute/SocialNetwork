@@ -50,7 +50,7 @@ public class Fragment_Chating extends Fragment {
 
 
 
-    String receiverUsername;
+  //  String receiverUsername;
     private boolean isViewShown=false;
     private boolean isStarted=false;
 
@@ -70,10 +70,10 @@ public class Fragment_Chating extends Fragment {
 
         connectView();
         profile_image.setImageResource(R.mipmap.ic_launcher);
-
-        if(isViewShown){
+        getData();
+       /* if(isViewShown){
             getData();
-        }
+        }*/
 
      /*   setUserVisibleHint(isViewShown);
         isViewShown=true;*/
@@ -133,9 +133,9 @@ public class Fragment_Chating extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Message message=snapshot.getValue(Message.class);
-//                    if(message.getIdSender().equals(senderAccount.getAccount_name()) || message.getIdReceiver().equals(senderAccount.getAccount_name())){
-//                        mMessage.add(message);
-//                    }
+                    if(message.getIdSender().equals(senderAccount.getAccount_name()) || message.getIdReceiver().equals(senderAccount.getAccount_name())){
+                        mMessage.add(message);
+                    }
                 }
                 xulyMessage();
 
