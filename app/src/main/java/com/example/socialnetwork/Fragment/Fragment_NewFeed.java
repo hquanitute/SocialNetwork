@@ -132,15 +132,17 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
                     friends.add(snapshot.getValue(Friend.class));
-                    Toast.makeText(getContext(),"aaaa",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "aaaa", Toast.LENGTH_LONG).show();
                 }
                 reset();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+       
         reset();
         return view;
     }
