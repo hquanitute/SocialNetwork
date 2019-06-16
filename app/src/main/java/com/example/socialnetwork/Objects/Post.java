@@ -11,18 +11,28 @@ public class Post {
     String image;
     Date posting_date;
     List<Comment> comments;
+    String video;
 
-    public Post(String post_id, String account_name, String text, String image, Date posting_date, List<Comment> comments) {
+    public Post(String post_id, String account_name, String text, String image, Date posting_date, List<Comment> comments,   String video) {
         this.post_id = post_id;
         this.account_name = account_name;
         this.text = text;
         this.image = image;
         this.posting_date = posting_date;
         this.comments = comments;
+        this.video=video;
     }
 
     public Post() {
         comments = new ArrayList<Comment>();
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public Post(String post_id, String account_name, String text, String image, Date posting_date) {

@@ -50,22 +50,7 @@ public class SignUp extends AppCompatActivity {
         String email = username.getText().toString();
         String pass = password.getText().toString();
         createUser(email,pass);
-//        mAuth.createUserWithEmailAndPassword(email, pass)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(SignUp.this,"Sign Up Success !",Toast.LENGTH_LONG).show();
-//
-//                            startActivity(new Intent(SignUp.this, MainActivity.class));
-//                        } else {
-//                            Toast.makeText(SignUp.this,"Sign Up Fail ! Try Again !",Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
     }
-
-
     public void createUser( String email, String password){
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -94,9 +79,10 @@ public class SignUp extends AppCompatActivity {
                             friend.setIdfriend(userid);
                             friend.setName_friend(displayname);
                             databaseReference.child("Friendship").child(displayname).child(id).setValue(friend);
+                            startActivity(new Intent(SignUp.this, MainActivity.class));
                         }
                         else {
-                            //Toast.makeText(getContext(),"That bai",Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignUp.this,"That bai",Toast.LENGTH_LONG).show();
                         }
                     }
                 });

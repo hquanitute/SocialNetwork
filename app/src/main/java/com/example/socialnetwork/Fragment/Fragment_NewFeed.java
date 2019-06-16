@@ -1,5 +1,6 @@
 package com.example.socialnetwork.Fragment;
 import android.app.Activity;
+import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.VideoView;
+
 import com.example.socialnetwork.Adapter.StatusAdapter;
 import com.example.socialnetwork.Interface.EventListener;
 import com.example.socialnetwork.Objects.Account;
@@ -52,9 +55,11 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
     ImageView imageView;
-    Button btnimage;
+    Button btnimage,btnvideo;
+    VideoView videoView;
     private static final int PICK_IMAGE=100;
-    Uri imageUri;
+    private static final int PICK_VIDEO=100;
+    Uri imageUri,selectedVideoUri;
     String Linkimage;
     private static String imagename;
     ListView lv_listStatus;
@@ -78,7 +83,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             @Override
             public void onClick(View v) {
                uploadimage();
-               afterPostStatus();
 	    }
 	});
         imageView=view.findViewById(R.id.imageView);
@@ -89,70 +93,37 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 opengallery();
             }
         });
+        btnvideo=view.findViewById(R.id.btnvideo);
+        videoView=view.findViewById(R.id.videoViewmain);
+        btnvideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opengalleryvideo();
+            }
+        });
         friends= new ArrayList<>();
         //Hien thi danh sach status
         lv_listStatus= view.findViewById(R.id.lv_ListStatus);
-        lv_listStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Cái này xóa cũng dc @@
-            }
-        });
         mDatabase = FirebaseDatabase.getInstance().getReference();
         posts = new ArrayList<>();
-        /*mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        posts.add(0, dataSnapshot.getValue(Post.class));
-                        keyList.add(dataSnapshot.getKey());
-                        imageView.setImageResource(0);
-                        imageView.setVisibility(View.GONE);
-                        et_status.setText("");
-                        adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                //int index = keyList.indexOf(dataSnapshot.getKey());
-                dspost.set(vitri,dataSnapshot.getValue(Post.class));
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-             *//*   int index = keyList.indexOf(dataSnapshot.getKey());
-                posts.remove( index);
-                keyList.remove(index);
-                adapter.notifyDataSetChanged();*//*
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
         mDatabase.child("Post").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                posts.clear();
+                keyList.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    posts.add( snapshot.getValue(Post.class));
+                    posts.add(0, snapshot.getValue(Post.class));
                     keyList.add(dataSnapshot.getKey());
                     imageView.setImageResource(0);
                     imageView.setVisibility(View.GONE);
+                    videoView.setVisibility(View.GONE);
                     et_status.setText("");
+                    adapter.notifyDataSetChanged();
                 }
                 reset();
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
 
         });
@@ -171,33 +142,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
             }
         });
-        /*mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                friends.add(dataSnapshot.getValue(Friend.class));
-                Toast.makeText(getContext(),"aaaa",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
+       
         reset();
         return view;
     }
@@ -207,16 +152,14 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
         adapter= new StatusAdapter(view.getContext(),R.layout.status_row,dspost,Fragment_NewFeed.this);
         lv_listStatus.setAdapter(adapter);
     }
-
-
-    private void afterPostStatus(){
-        // reset EditText and ImageView
-        //.setVisibility(View.GONE);
-    }
-
     private void opengallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery,PICK_IMAGE);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+    private  void opengalleryvideo()
+    {
+        Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_VIDEO);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -232,6 +175,19 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
+
+        }
+        if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
+        {
+            selectedVideoUri = data.getData();
+            videoView.setVideoURI(selectedVideoUri);
+            videoView.setVisibility(View.VISIBLE);
+            Cursor cursor = getActivity().getContentResolver().query(selectedVideoUri, null, null, null, null);
+            int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            cursor.moveToFirst();
+            imagename= cursor.getString(nameIndex);
+            imagename= imagename.substring(0,imagename.length()-4);
+            Toast.makeText(getContext(),imagename,Toast.LENGTH_LONG).show();
 
         }
     }
@@ -282,6 +238,44 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 }
             });
         }
+       else if (videoView.getDrawableState()!=null)
+        {
+            videoView.setDrawingCacheEnabled(true);
+            videoView.buildDrawingCache();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            UploadTask uploadTask = mountainsRef.putFile(selectedVideoUri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name(displayname);
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (videoView.getDrawableState()!=null) {
+                            post.setVideo(downloadUri.toString());
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);
+                }
+                }
+            });
+        }
         else
         {
             String status = et_status.getText().toString();
@@ -294,6 +288,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             mDatabase.child("Post").child(id).setValue(post);
         }
     }
+
     public void sendComment(Post oldPost, String comment,int position){
         vitri=position;
         mDatabase = FirebaseDatabase.getInstance().getReference("Post");
@@ -318,12 +313,13 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
     }
     public void loadpost() {
-
-        for (int i=0;i<friends.size();i++)
+        dspost.clear();
             for (int j=0;j<posts.size();j++) {
-                if (posts.get(j).getAccount_name().toLowerCase().equals(friends.get(i).getName_friend().toLowerCase())) {
-                    dspost.add(posts.get(j));
-                    Toast.makeText(getContext(),"aaaa",Toast.LENGTH_LONG).show();
+                for (int i = 0; i < friends.size(); i++) {
+                    if (posts.get(j).getAccount_name().toLowerCase().equals(friends.get(i).getName_friend().toLowerCase())) {
+                        dspost.add(posts.get(j));
+                        Toast.makeText(getContext(),"",Toast.LENGTH_LONG).show();
+                    }
                 }
             }
     }
