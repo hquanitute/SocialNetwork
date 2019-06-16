@@ -156,7 +156,22 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             }
 
         });
-        mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Friendship").child(displayname).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                    friends.add(snapshot.getValue(Friend.class));
+                    Toast.makeText(getContext(), "aaaa", Toast.LENGTH_LONG).show();
+                }
+                reset();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        /*mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 friends.add(dataSnapshot.getValue(Friend.class));
@@ -182,7 +197,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
         reset();
         return view;
     }
