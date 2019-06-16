@@ -35,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +59,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     private static String imagename;
     ListView lv_listStatus;
     ArrayList<Post> posts;
+    ArrayList<Post> dspost= new ArrayList<>();
     StatusAdapter adapter;
     List<String> keyList = new ArrayList<String>();
     private int vitri;
@@ -98,36 +100,30 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
         });
         mDatabase = FirebaseDatabase.getInstance().getReference();
         posts = new ArrayList<>();
-        mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
+        /*mDatabase.child("Post").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for (int i=0;i<friends.size();i++)
-                {
-                    if(dataSnapshot.getValue(Post.class).getAccount_name().equals(friends.get(i).getName_friend()))
-                    {
                         posts.add(0, dataSnapshot.getValue(Post.class));
                         keyList.add(dataSnapshot.getKey());
-                        adapter.notifyDataSetChanged();
                         imageView.setImageResource(0);
                         imageView.setVisibility(View.GONE);
                         et_status.setText("");
-                    }
-                }
+                        adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //int index = keyList.indexOf(dataSnapshot.getKey());
-                posts.set(vitri,dataSnapshot.getValue(Post.class));
+                dspost.set(vitri,dataSnapshot.getValue(Post.class));
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-             /*   int index = keyList.indexOf(dataSnapshot.getKey());
+             *//*   int index = keyList.indexOf(dataSnapshot.getKey());
                 posts.remove( index);
                 keyList.remove(index);
-                adapter.notifyDataSetChanged();*/
+                adapter.notifyDataSetChanged();*//*
             }
 
             @Override
@@ -139,6 +135,26 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+        });*/
+        mDatabase.child("Post").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    posts.add( snapshot.getValue(Post.class));
+                    keyList.add(dataSnapshot.getKey());
+                    imageView.setImageResource(0);
+                    imageView.setVisibility(View.GONE);
+                    et_status.setText("");
+                }
+                reset();
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
         });
         mDatabase.child("Friendship").child(displayname).addChildEventListener(new ChildEventListener() {
             @Override
@@ -167,14 +183,13 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
             }
         });
-
-
         reset();
         return view;
     }
     private void reset()
     {
-        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,posts,Fragment_NewFeed.this);
+        loadpost();
+        adapter= new StatusAdapter(view.getContext(),R.layout.status_row,dspost,Fragment_NewFeed.this);
         lv_listStatus.setAdapter(adapter);
     }
 
@@ -286,5 +301,15 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     @Override
     public void addfriend(Account account) {
 
+    }
+    public void loadpost() {
+
+        for (int i=0;i<friends.size();i++)
+            for (int j=0;j<posts.size();j++) {
+                if (posts.get(j).getAccount_name().toLowerCase().equals(friends.get(i).getName_friend().toLowerCase())) {
+                    dspost.add(posts.get(j));
+                    Toast.makeText(getContext(),"aaaa",Toast.LENGTH_LONG).show();
+                }
+            }
     }
 }

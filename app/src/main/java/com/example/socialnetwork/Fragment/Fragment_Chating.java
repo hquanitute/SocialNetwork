@@ -40,20 +40,12 @@ public class Fragment_Chating extends Fragment {
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
-
     Account receiveAccount;
     Account senderAccount;
-
-
-
     List<Account> _account=new ArrayList<>();
-
-
-
     String receiverUsername;
     private boolean isViewShown=false;
     private boolean isStarted=false;
-
     List<Message> mMessage;
     UserMessageAdapter userMessageAdapter;
     @Override

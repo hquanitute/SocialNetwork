@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.socialnetwork.Objects.Friend;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -87,7 +88,12 @@ public class SignUp extends AppCompatActivity {
                             hashMap.put("imageURL","default");
                             databaseReference.setValue(hashMap);
 
-                            //databaseReference=FirebaseDatabase.getInstance().getReference("Friendship").child(userid);
+                            databaseReference= FirebaseDatabase.getInstance().getReference();
+                            String id = databaseReference.push().getKey();
+                            Friend friend = new Friend();
+                            friend.setIdfriend(userid);
+                            friend.setName_friend(displayname);
+                            databaseReference.child("Friendship").child(displayname).child(id).setValue(friend);
                         }
                         else {
                             //Toast.makeText(getContext(),"That bai",Toast.LENGTH_LONG).show();
