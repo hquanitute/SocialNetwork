@@ -7,6 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+
 import com.example.socialnetwork.Adapter.MainView;
 import com.example.socialnetwork.Fragment.Fragment_Chating;
 import com.example.socialnetwork.Fragment.Fragment_Friends;
@@ -22,7 +24,10 @@ public class Index extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+//        getSupportActionBar().hide();
         setContentView(R.layout.activity_index);
+
         showFragment();
 
         Intent intent = getIntent();
