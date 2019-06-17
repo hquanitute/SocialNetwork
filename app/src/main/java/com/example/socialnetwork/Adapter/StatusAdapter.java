@@ -1,30 +1,23 @@
 package com.example.socialnetwork.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
-
-import com.example.socialnetwork.Objects.Comment;
 import com.example.socialnetwork.Objects.Post;
 import com.example.socialnetwork.R;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.example.socialnetwork.Interface.EventListener;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class StatusAdapter extends BaseAdapter {
@@ -82,6 +75,9 @@ public class StatusAdapter extends BaseAdapter {
         viewHolder.tv_NameAccount.setText(post.getAccount_name());
         viewHolder.tv_Content.setText(post.getText());
         viewHolder.imageView.setImageResource(0);
+
+
+
         if(post.getComments()!=null&&post.getComments().size()>0){
             adapter = new CommentAdapter(context,R.layout.comment_row,post.getComments());
             viewHolder.lv_comments.setAdapter(adapter);
