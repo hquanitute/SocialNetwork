@@ -58,10 +58,10 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     Button btnimage,btnvideo;
     VideoView videoView;
     private static final int PICK_IMAGE=100;
-    private static final int PICK_VIDEO=100;
+    private static final int PICK_VIDEO=200;
     Uri imageUri,selectedVideoUri;
     String Linkimage;
-    private static String imagename;
+    private static String imagename,videoname;
     ListView lv_listStatus;
     ArrayList<Post> posts;
     ArrayList<Post> dspost= new ArrayList<>();
@@ -177,7 +177,8 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
 
         }
-        if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
+        else
+       // if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
         {
             selectedVideoUri = data.getData();
             videoView.setVideoURI(selectedVideoUri);
@@ -187,7 +188,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
-            Toast.makeText(getContext(),imagename,Toast.LENGTH_LONG).show();
 
         }
     }
@@ -267,7 +267,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                         post.setPost_id(id);
                         if (videoView.getDrawableState()!=null) {
                             post.setVideo(downloadUri.toString());
-                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
                         }

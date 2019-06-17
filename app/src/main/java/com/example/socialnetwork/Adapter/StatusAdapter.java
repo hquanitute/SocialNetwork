@@ -103,12 +103,19 @@ public class StatusAdapter extends BaseAdapter {
             viewHolder.imageView.setVisibility(View.VISIBLE);
             //imageView.setImageDrawable("Kha làm ở đây");
             Picasso.with(context).load(post.getImage()).into(viewHolder.imageView);
+        }else {
+            viewHolder.imageView.setVisibility(View.GONE);
         }
         if(post.getVideo()!=null){
             viewHolder.videoView.setVisibility(View.VISIBLE);
             //imageView.setImageDrawable("Kha làm ở đây");
            viewHolder.videoView.setVideoPath(post.getVideo());
            viewHolder.videoView.setMediaController(new MediaController(context));
+            viewHolder.videoView.seekTo(1);
+        }
+        else
+        {
+            viewHolder.videoView.setVisibility(View.GONE);
         }
         viewHolder.btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
