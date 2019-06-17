@@ -136,12 +136,12 @@ public class ChatActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!edt_Message.getText().toString().equals("")){
-                    sendMessage(senderAccount.getAccount_name(),receiverUsername,edt_Message.getText().toString());
-
+                if(edt_Message.getText().toString().equals("")&&!check&&imageView.getDrawable()==null){
+                    Toast.makeText(ChatActivity.this,"Chọn nội dung gửi tin nhắn!",Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(ChatActivity.this,"Nhập nội dung tin nhắn!",Toast.LENGTH_LONG).show();
+                    sendMessage(senderAccount.getAccount_name(),receiverUsername,edt_Message.getText().toString());
+
                 }
             }
         });

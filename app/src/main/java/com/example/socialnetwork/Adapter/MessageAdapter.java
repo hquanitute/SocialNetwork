@@ -109,6 +109,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             mediaController.setAnchorView(viewHolder.videoView);
             viewHolder.videoView.start();
         }
+        if(message.getMessage().equals("")){
+            viewHolder.tvMessage.setVisibility(View.GONE);
+        }
     }
     @Override
     public int getItemCount() {
