@@ -85,8 +85,6 @@ public class ChatActivity extends AppCompatActivity {
     private static String imagename;
     Uri imageUri;
 
-    Boolean checkVideoview=false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +144,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!edt_Message.getText().toString().equals("")){
-
                     sendMessage(senderAccount.getAccount_name(),receiverUsername,edt_Message.getText().toString());
 
                 }
@@ -211,7 +208,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void readMessage (final String myid, final String receiverId){
-
         mMessage=new ArrayList<>();
         mMessage.clear();
         databaseReference=FirebaseDatabase.getInstance().getReference("Chats");
@@ -266,7 +262,7 @@ public class ChatActivity extends AppCompatActivity {
 
             ContentResolver cr = this.getContentResolver();
             String mime = cr.getType(imageUri);
-            if(mime.equals("image/jpeg")){
+            if(mime.equals("image/png")){
                 imageView.setImageURI(imageUri);
                 imageView.setVisibility(View.VISIBLE);
                 Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
@@ -276,7 +272,6 @@ public class ChatActivity extends AppCompatActivity {
                 imagename= imagename.substring(0,imagename.length()-4);
             }
             if(mime.equals("video/mp4")){
-                checkVideoview=true;
                 //imageView.setImageURI(imageUri);
                 videoView.setVisibility(View.VISIBLE);
                 Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
@@ -359,7 +354,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
-        else if(checkVideoview){
+        else if(videoView.getDrawableState()!=null){
             videoView.setDrawingCacheEnabled(true);
             videoView.buildDrawingCache();
             final StorageReference mountainsRef = storageRef.child(imagename);
@@ -396,8 +391,6 @@ public class ChatActivity extends AppCompatActivity {
                         /*imageView.setVisibility(View.GONE);
                         imageView.setImageDrawable(null);*/
 
-                        checkVideoview=false;
-
                         videoView.setVisibility(View.GONE);
                         videoView.setVideoURI(null);
 
@@ -429,8 +422,8 @@ public class ChatActivity extends AppCompatActivity {
             message.setImage("default");
             message.setVideo("default");
 
-            databaseReference.child("Chats").push().setValue(message);
 
+            databaseReference.child("Chats").push().setValue(message);
             edt_Message.setText("");
             imageView.setVisibility(View.GONE);
             videoView.setVisibility(VideoView.GONE);

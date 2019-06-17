@@ -37,8 +37,6 @@ public class StatusAdapter extends BaseAdapter {
     private DatabaseReference mDatabase;
     EventListener listener;
 
-    MediaController MediaController;
-
     public StatusAdapter(Context context, int layout, List<Post> posts,EventListener listener) {
         this.context = context;
         this.layout = layout;
@@ -63,7 +61,6 @@ public class StatusAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        MediaController=new MediaController(context);
         final ViewHolder viewHolder;
         if (convertView==null)
         {
@@ -103,21 +100,13 @@ public class StatusAdapter extends BaseAdapter {
             viewHolder.imageView.setVisibility(View.GONE);
         }
         if(post.getVideo()!=null){
-
+            MediaController MediaController = new MediaController(context);
             viewHolder.videoView.setVisibility(View.VISIBLE);
             //imageView.setImageDrawable("Kha làm ở đây");
            viewHolder.videoView.setVideoPath(post.getVideo());
-           //viewHolder.videoView.setMediaController(MediaController);
+           viewHolder.videoView.setMediaController(MediaController);
            MediaController.setAnchorView(viewHolder.videoView);
             viewHolder.videoView.seekTo(1);
-            viewHolder.videoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    viewHolder.videoView.setMediaController(MediaController);
-                    viewHolder.videoView.start();
-                }
-            });
         }
         else
         {
