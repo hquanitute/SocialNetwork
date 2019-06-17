@@ -115,7 +115,6 @@ public class Fragment_Friends extends Fragment implements EventListener {
                        {
                            accteamp.add(accounts.get(i));
                            searchFriendAdapter.notifyDataSetChanged();
-                           //Toast.makeText(getContext(),"aaaaaaaa",Toast.LENGTH_LONG).show();
                        }
                    }
                    lv_friend.setAdapter(searchFriendAdapter);

@@ -132,7 +132,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
                     friends.add(snapshot.getValue(Friend.class));
-                    Toast.makeText(getContext(), "aaaa", Toast.LENGTH_LONG).show();
                 }
                 reset();
             }
@@ -178,7 +177,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
 
         }
-        else
+        else if(resultCode== Activity.RESULT_OK && requestCode==PICK_VIDEO)
         {
             selectedVideoUri = data.getData();
             videoView.setVideoURI(selectedVideoUri);
@@ -191,6 +190,10 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
             check=true;
+        }
+        else
+        {
+
         }
     }
 
@@ -321,7 +324,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 for (int i = 0; i < friends.size(); i++) {
                     if (posts.get(j).getAccount_name().toLowerCase().equals(friends.get(i).getName_friend().toLowerCase())) {
                         dspost.add(posts.get(j));
-                        Toast.makeText(getContext(),"",Toast.LENGTH_LONG).show();
                     }
                 }
             }

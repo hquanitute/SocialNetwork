@@ -61,30 +61,23 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView imageView;
     VideoView videoView;
-
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
-
     Account receiveAccount;
     Account senderAccount;
-
-
-
     String receiverUsername;
     String Linkimage;
-
     List<Message> mMessage;
     MessageAdapter messageAdapter;
-
     Intent intent;
     private static final int PICK_IMAGE=100;
     private static final int PICK_VIDEO=100;
     private static String imagename;
     Uri imageUri;
-
+    Boolean check=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -284,6 +277,7 @@ public class ChatActivity extends AppCompatActivity {
                 videoView.setMediaController(mediaController);
                 mediaController.setAnchorView(videoView);
                 videoView.start();
+                check=true;
             }
 
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
@@ -354,7 +348,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
-        else if(videoView.getDrawableState()!=null){
+        else if(check){
             videoView.setDrawingCacheEnabled(true);
             videoView.buildDrawingCache();
             final StorageReference mountainsRef = storageRef.child(imagename);
@@ -393,7 +387,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         videoView.setVisibility(View.GONE);
                         videoView.setVideoURI(null);
-
+                        check=false;
                         /*String status = et_status.getText().toString();
                         Post post = new Post();
                         post.setAccount_name(displayname);
