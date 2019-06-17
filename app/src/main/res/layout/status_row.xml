@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:background="#CCFFFF">
     <android.support.v7.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         app:cardCornerRadius="20dp"
         android:layout_margin="10dp"
         android:background="#000000">
@@ -19,7 +19,8 @@
             android:orientation="vertical">
             <TextView
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
                 android:id="@+id/tv_NameAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,10 +29,11 @@
                 android:text="Tên tài khoản" />
             <TextView
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:id="@+id/tv_Content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#000000"
                 android:text="Tiêu đề" />
             <ImageView
                 android:id="@+id/imageView"
@@ -42,24 +44,41 @@
                 tools:srcCompat="@tools:sample/avatars" />
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="225dp">
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="match_parent"
-                android:layout_height="225dp"
-                android:layout_margin="10dp"
-                android:layout_gravity="center"
-                tools:srcCompat="@tools:sample/avatars" />
-            </FrameLayout>
+                android:layout_height="wrap_content">
 
+                <VideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="225dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="10dp"
+                    tools:srcCompat="@tools:sample/avatars" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textStyle="bold|italic"
+                android:text="Bình luận :"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"/>
             <ListView
                 android:id="@+id/comments"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_margin="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="148dp"
                 android:background="#FFFFFF"
-                android:numColumns="auto_fit"></ListView>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:stackFromBottom="true"
+                ></ListView>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,9 +92,15 @@
                     android:layout_weight="1"
                     android:background="@drawable/textcomment"
                     android:textColor="#000000"
-                    android:hint="    Nhập bình luận"
+                    android:paddingStart="15dp"
+                    android:hint="Nhập bình luận"
                     android:textSize="18sp"
-                    android:minHeight="50dp" />
+                    android:minHeight="50dp"
+                    android:inputType="textMultiLine"
+                    android:lines="2"
+                    android:minLines="1"
+                    android:gravity="center|left"
+                    android:maxLines="2"/>
 
                 <ImageButton
                     android:id="@+id/btnComment"
