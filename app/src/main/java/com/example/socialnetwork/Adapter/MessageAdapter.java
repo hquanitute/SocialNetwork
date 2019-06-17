@@ -107,7 +107,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             MediaController mediaController=new MediaController(mContext);
             viewHolder.videoView.setMediaController(mediaController);
             mediaController.setAnchorView(viewHolder.videoView);
-            viewHolder.videoView.start();
+            viewHolder.videoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewHolder.videoView.start();
+                }
+            });
         }
     }
     @Override
