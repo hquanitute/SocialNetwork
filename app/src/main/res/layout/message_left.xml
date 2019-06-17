@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="300dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:padding="8dp">
 
@@ -31,8 +33,20 @@
     android:layout_width="150dp"
     android:layout_height="150dp"
     android:layout_below="@+id/layoutLeft"
-    android:layout_marginBottom="10dp"
     android:visibility="gone"/>
+    <FrameLayout
+        android:layout_below="@+id/layoutLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <VideoView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/videoView"
+            android:layout_below="@+id/layoutLeft"
+            android:visibility="gone"
+            ></VideoView>
+    </FrameLayout>
+
 
 
 

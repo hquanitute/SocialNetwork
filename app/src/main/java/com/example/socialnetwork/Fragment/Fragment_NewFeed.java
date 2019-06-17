@@ -188,7 +188,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
             Toast.makeText(getContext(),imagename,Toast.LENGTH_LONG).show();
-
         }
     }
     public void uploadimage() {

@@ -66,6 +66,14 @@
             android:layout_toRightOf="@+id/btnImageSend"
             android:layout_marginBottom="10dp"
             android:visibility="gone"/>
+        <VideoView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/videoView"
+            android:layout_toRightOf="@+id/btnImageSend"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            tools:ignore="WebViewLayout"></VideoView>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
