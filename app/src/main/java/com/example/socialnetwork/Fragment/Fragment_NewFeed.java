@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -178,17 +179,17 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
         }
         else
-       // if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
         {
             selectedVideoUri = data.getData();
             videoView.setVideoURI(selectedVideoUri);
             videoView.setVisibility(View.VISIBLE);
+            videoView.seekTo(1);
+            videoView.start();
             Cursor cursor = getActivity().getContentResolver().query(selectedVideoUri, null, null, null, null);
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
-
         }
     }
     public void uploadimage() {
