@@ -106,18 +106,16 @@ public class ChatActivity extends AppCompatActivity {
                     Account account=snapshot.getValue(Account.class);
                     if(account.getId().equals(userid)){
                         senderAccount=account;
-                        username.setText(senderAccount.getAccount_name());
-                        if(account.getImageURL().equals("default")){
-                            profile_image.setImageResource(R.mipmap.ic_launcher);
-                        }
-                        else {
-                            Glide.with(ChatActivity.this).load(account.getImageURL()).into(profile_image);
-                        }
-
-
                     }
                     if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
                         receiveAccount=account;
+                        username.setText(receiveAccount.getAccount_name());
+                        if(receiveAccount.getImageURL().equals("default")){
+                            profile_image.setImageResource(R.mipmap.ic_launcher);
+                        }
+                        else {
+                            Glide.with(ChatActivity.this).load(receiveAccount.getImageURL()).into(profile_image);
+                        }
                     }
                 }
                 readMessage(senderAccount.getAccount_name(),receiverUsername);
