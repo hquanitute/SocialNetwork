@@ -31,10 +31,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Fragment_Chating extends Fragment {
     View view;
     String email,displayname;
-    TextView username;
+//    TextView username;
     EditText edt_Message;
     ImageButton btnSend;
-    CircleImageView profile_image;
+   // CircleImageView profile_image;
     RecyclerView recyclerView;
 
     FirebaseAuth firebaseAuth;
@@ -63,7 +63,7 @@ public class Fragment_Chating extends Fragment {
         displayname = getArguments().getString("displayname");
 
         connectView();
-        profile_image.setImageResource(R.mipmap.ic_launcher);
+       // profile_image.setImageResource(R.mipmap.ic_launcher);
         getData();
        /* if(isViewShown){
             getData();
@@ -95,13 +95,13 @@ public class Fragment_Chating extends Fragment {
                     _account.add(account);
                     if(account.getId().equals(userid)){
                         senderAccount=account;
-                        username.setText(senderAccount.getAccount_name());
+                       /* username.setText(senderAccount.getAccount_name());
                         if(account.getImageURL().equals("default")){
                             profile_image.setImageResource(R.mipmap.ic_launcher);
                         }
                         else {
                             Glide.with(getContext()).load(senderAccount.getImageURL()).into(profile_image);
-                        }
+                        }*/
                     }
                   /*  if(account.getAccount_name().equals(receiveAccount.getAccount_name())){
                         receiveAccount=account;
@@ -182,8 +182,8 @@ public class Fragment_Chating extends Fragment {
     }
 
     private void connectView() {
-        username=view.findViewById(R.id.tv_profile);
-        profile_image=view.findViewById(R.id.profile_image);
+        //username=view.findViewById(R.id.tv_profile);
+       // profile_image=view.findViewById(R.id.profile_image);
 
         recyclerView=view.findViewById(R.id.userMessager_recycle);
         recyclerView.setHasFixedSize(true);

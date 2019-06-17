@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.socialnetwork.Interface.EventListener;
 import com.example.socialnetwork.Objects.Account;
 import com.example.socialnetwork.Objects.Friend;
@@ -76,7 +78,13 @@ public class SearchFriendAdapter extends BaseAdapter {
             viewHolder.btnaddfriend=convertView.findViewById(R.id.btnaddfriend);
 
             final Account account = accounts.get(position);
-            viewHolder.tvAvatarsearch.setText(account.getId());
+            //viewHolder.tvAvatarsearch.setText(account.getId());
+            if(account.getImageURL().equals("default")){
+                viewHolder.tvAvatarsearch.setImageResource(R.mipmap.ic_launcher);
+            }
+            else {
+                Glide.with(context).load(account.getImageURL()).into(viewHolder.tvAvatarsearch);
+            }
             viewHolder.tvNamesearch.setText(account.getAccount_name());
             int flag=0;
             for (int i=0;i<friends.size();i++)
@@ -107,7 +115,8 @@ public class SearchFriendAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        TextView tvAvatarsearch, tvNamesearch,tvAvatar,tvName;
+        TextView  tvNamesearch,tvAvatar,tvName;
+        ImageView tvAvatarsearch;
         Button btnaddfriend;
     }
    /* private void getdata(String displayName)

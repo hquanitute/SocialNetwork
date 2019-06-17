@@ -5,23 +5,19 @@ public class Message {
     String idReceiver;
     String message;
     String image;
+    String video;
 
     public Message() {
     }
 
-    public String getImage() {
-        return image;
-    }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 
-    public Message(String idSender, String idReceiver, String message, String image) {
+    public Message(String idSender, String idReceiver, String message, String image, String video) {
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.message = message;
         this.image=image;
+        this.video=video;
     }
 
     public String getIdSender() {
@@ -46,5 +42,20 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 }
