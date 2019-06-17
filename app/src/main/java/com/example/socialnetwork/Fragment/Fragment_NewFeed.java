@@ -131,7 +131,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
                     friends.add(snapshot.getValue(Friend.class));
-                    Toast.makeText(getContext(), "aaaa", Toast.LENGTH_LONG).show();
                 }
                 reset();
             }
@@ -322,7 +321,6 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 for (int i = 0; i < friends.size(); i++) {
                     if (posts.get(j).getAccount_name().toLowerCase().equals(friends.get(i).getName_friend().toLowerCase())) {
                         dspost.add(posts.get(j));
-                        Toast.makeText(getContext(),"",Toast.LENGTH_LONG).show();
                     }
                 }
             }
