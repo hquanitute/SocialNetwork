@@ -47,6 +47,7 @@ public class SignUp extends AppCompatActivity {
     Uri imageUri;
     String Linkimage=null;
     DatabaseReference databaseReference;
+    boolean check=false;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
     @Override
@@ -97,7 +98,7 @@ public class SignUp extends AppCompatActivity {
             imagename = cursor.getString(nameIndex);
             imagename = imagename.substring(0, imagename.length() - 4);
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
-
+            check=true;
         }
     }
     public void uploadimage() {
@@ -117,7 +118,7 @@ public class SignUp extends AppCompatActivity {
                             displayname = firebaseUser.getEmail();
                             displayname = displayname.substring(0, displayname.length() - 10);
 
-                            if (avatar.getDrawable() != null) {
+                            if (check) {
                                 avatar.setDrawingCacheEnabled(true);
                                 avatar.buildDrawingCache();
                                 Bitmap bitmap = ((BitmapDrawable) avatar.getDrawable()).getBitmap();
@@ -149,14 +150,15 @@ public class SignUp extends AppCompatActivity {
                                             hashMap.put("account_name",displayname);
                                             hashMap.put("imageURL",Linkimage);
                                             databaseReference.setValue(hashMap);
-
                                             databaseReference= FirebaseDatabase.getInstance().getReference();
                                             String id = databaseReference.push().getKey();
                                             Friend friend = new Friend();
                                             friend.setIdfriend(userid);
                                             friend.setName_friend(displayname);
                                             databaseReference.child("Friendship").child(displayname).child(id).setValue(friend);
+                                            check=false;
                                             startActivity(new Intent(SignUp.this, MainActivity.class));
+                                            Toast.makeText(SignUp.this,"Đăng Ký Thành Công",Toast.LENGTH_LONG).show();
                                         } else {
                                             // Handle failures
                                             // ...
@@ -178,6 +180,7 @@ public class SignUp extends AppCompatActivity {
                                 friend.setName_friend(displayname);
                                 databaseReference.child("Friendship").child(displayname).child(id).setValue(friend);
                                 startActivity(new Intent(SignUp.this, MainActivity.class));
+                                Toast.makeText(SignUp.this,"Đăng Ký Thành Công",Toast.LENGTH_LONG).show();
                             }
                         }
                         else {

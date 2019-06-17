@@ -176,7 +176,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
 
         }
-        else
+        else if(resultCode== Activity.RESULT_OK && requestCode==PICK_VIDEO)
         {
             selectedVideoUri = data.getData();
             videoView.setVideoURI(selectedVideoUri);
@@ -189,6 +189,10 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
             check=true;
+        }
+        else
+        {
+
         }
     }
     public void uploadimage() {
