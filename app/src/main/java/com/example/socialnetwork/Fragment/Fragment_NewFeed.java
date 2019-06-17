@@ -10,17 +10,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -70,6 +67,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     List<String> keyList = new ArrayList<String>();
     private int vitri;
     ArrayList<Friend> friends;
+    boolean check=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,6 +188,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
             cursor.moveToFirst();
             imagename= cursor.getString(nameIndex);
             imagename= imagename.substring(0,imagename.length()-4);
+            check=true;
         }
     }
     public void uploadimage() {
@@ -239,7 +238,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                 }
             });
         }
-       else if (videoView.getDrawableState()!=null)
+       else if (check==true)
         {
             videoView.setDrawingCacheEnabled(true);
             videoView.buildDrawingCache();
@@ -272,6 +271,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
                             Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
                         }
                         mDatabase.child("Post").child(id).setValue(post);
+                        check=false;
                 }
                 }
             });
