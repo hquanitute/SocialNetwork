@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="#6699FF">
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#EEEEEE">
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -31,11 +26,8 @@
                 android:textSize="20dp"
                 android:textColor="#000000"
                 android:textStyle="bold"/>
-
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,16 +47,19 @@
         android:background="@drawable/textcomment">
         <ImageButton
             android:id="@+id/btnImageSend"
-            android:layout_width="46dp"
+            android:layout_width="40dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/image"
-            android:layout_height="46dp" />
+            android:layout_height="40dp" />
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_toRightOf="@+id/btnImageSend"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="45dp"
+            android:layout_marginLeft="30dp"
             android:visibility="gone"/>
         <VideoView
             android:layout_width="150dp"
@@ -72,33 +67,33 @@
             android:id="@+id/videoView"
             android:layout_toRightOf="@+id/btnImageSend"
             android:visibility="gone"
+            android:layout_marginBottom="45dp"
+            android:layout_marginLeft="30dp"
             android:layout_centerInParent="true"
             tools:ignore="WebViewLayout"></VideoView>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/btnImageSend"
-            android:id="@+id/edt_Message"
-            android:textSize="20sp"
-            android:textColor="#000000"
+            <EditText
+                android:id="@+id/edt_Message"
+                android:layout_width="274dp"
+                android:layout_height="45dp"
+                android:layout_alignBottom="@+id/imageView"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="-50dp"
+                android:layout_toEndOf="@+id/btnImageSend"
+                android:layout_toRightOf="@+id/btnImageSend"
+                android:hint="Nhập tin nhắn ..."
+                android:paddingStart="10dp"
+                android:textColor="#000000" />
 
-            android:layout_alignBottom="@+id/imageView"
-            android:layout_toRightOf="@+id/btnImageSend"
-            android:hint="  Nhập tin nhắn ..."
-            android:layout_toLeftOf="@+id/btnSend"
-            android:layout_centerVertical="true"
-            />
-
-
-        <ImageButton
-            android:id="@+id/btnSend"
-            android:layout_width="40dp"
-            android:layout_height="46dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/send" />
-
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/send" />
     </RelativeLayout>
 
 

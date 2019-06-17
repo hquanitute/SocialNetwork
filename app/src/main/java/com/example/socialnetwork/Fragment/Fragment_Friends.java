@@ -41,7 +41,6 @@ public class Fragment_Friends extends Fragment implements EventListener {
     DatabaseReference mDatabase ;
     List<String> keyList = new ArrayList<String>();
     FriendAdapter friendAdapter;
-    Button search_friend;
     EditText addfriend;
     ArrayList<Account> accteamp;
     SearchFriendAdapter searchFriendAdapter;
@@ -55,7 +54,6 @@ public class Fragment_Friends extends Fragment implements EventListener {
         email = getArguments().getString("email");
         displayname = getArguments().getString("displayname");
         lv_friend= view.findViewById(R.id.lvFriend);
-        search_friend=view.findViewById(R.id.search_friend);
         addfriend=view.findViewById(R.id.addfriend);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         friends = new ArrayList<>();
