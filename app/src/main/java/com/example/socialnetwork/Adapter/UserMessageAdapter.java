@@ -66,7 +66,7 @@ public class UserMessageAdapter extends RecyclerView.Adapter<UserMessageAdapter.
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
 
-        Message message=mMessage.get(i);
+        final Message message=mMessage.get(i);
 
         viewHolder.tvMessage.setText(message.getMessage());
         if(!message.getIdSender().equals(sender.getAccount_name())){
@@ -102,7 +102,12 @@ public class UserMessageAdapter extends RecyclerView.Adapter<UserMessageAdapter.
             @Override
             public void onClick(View v) {
                 Intent _intent=new Intent(mContext, ChatActivity.class);
-                _intent.putExtra("receiver",receive.getAccount_name());
+                if(message.getIdReceiver().equals(sender.getAccount_name())){
+                    _intent.putExtra("receiver",message.getIdSender());
+                }
+                else {
+                    _intent.putExtra("receiver",message.getIdReceiver());
+                }
                 mContext.startActivity(_intent);
             }
         });

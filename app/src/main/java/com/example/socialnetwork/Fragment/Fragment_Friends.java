@@ -85,6 +85,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
                     //keyList.add(dataSnapshot.getKey());
                     friendAdapter.notifyDataSetChanged();
                 }
+                friendAdapter = new FriendAdapter(getContext(),R.layout.row_searchfriend,friends,accounts);
             }
 
             @Override
@@ -92,7 +93,7 @@ public class Fragment_Friends extends Fragment implements EventListener {
 
             }
         });
-        friendAdapter = new FriendAdapter(getContext(),R.layout.row_searchfriend,friends);
+        friendAdapter = new FriendAdapter(getContext(),R.layout.row_searchfriend,friends,accounts);
         lv_friend.setAdapter(friendAdapter);
         addfriend.addTextChangedListener(new TextWatcher() {
             @Override
