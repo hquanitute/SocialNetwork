@@ -10,7 +10,7 @@
         android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.Toolbar
+       <!-- <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#EEEEEE">
@@ -29,7 +29,7 @@
                 android:textColor="#000000"
                 android:textStyle="bold"/>
 
-        </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>-->
 
     </android.support.design.widget.AppBarLayout>
 

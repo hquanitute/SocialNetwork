@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.socialnetwork.ChatActivity;
@@ -84,10 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             else {
                 Glide.with(mContext).load(sender.getImageURL()).into(viewHolder.profile_Image);
             }
-            if(!message.getImage().equals("default")){
-                Glide.with(mContext).load(message.getImage()).into(viewHolder.imageView);
-                viewHolder.imageView.setVisibility(View.VISIBLE);
-            }
+
         }
         else{
             if(receive.getImageURL().equals("default")){
@@ -96,10 +95,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             else {
                 Glide.with(mContext).load(receive.getImageURL()).into(viewHolder.profile_Image);
             }
-            if(!message.getImage().equals("default")){
-                Glide.with(mContext).load(message.getImage()).into(viewHolder.imageView);
-                viewHolder.imageView.setVisibility(View.VISIBLE);
-            }
+        }
+        if(!message.getImage().equals("default")){
+            Glide.with(mContext).load(message.getImage()).into(viewHolder.imageView);
+            viewHolder.imageView.setVisibility(View.VISIBLE);
+        }
+        if(!message.getVideo().equals("default")){
+            viewHolder.videoView.setVisibility(View.VISIBLE);
+            viewHolder.videoView.setVideoPath(message.getVideo());
+            viewHolder.videoView.seekTo(1);
+            MediaController mediaController=new MediaController(mContext);
+            viewHolder.videoView.setMediaController(mediaController);
+            mediaController.setAnchorView(viewHolder.videoView);
+            viewHolder.videoView.start();
         }
     }
     @Override
@@ -111,6 +119,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         CircleImageView profile_Image;
         TextView tvMessage;
         ImageView imageView;
+        VideoView videoView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,6 +127,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             profile_Image=itemView.findViewById(R.id.profile_image);
             tvMessage=itemView.findViewById(R.id.showmessage);
             imageView=itemView.findViewById(R.id.imageView);
+            videoView=itemView.findViewById(R.id.videoView);
         }
     }
 }

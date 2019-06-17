@@ -6,8 +6,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:id="@+id/layoutRight"
         android:padding="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutRight">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
@@ -26,16 +30,32 @@
             android:textColor="#FFFFFF"
             android:id="@+id/showmessage"
             android:padding="8dp"/>
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_below="@+id/layoutRight"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutRight"
+            android:layout_alignParentEnd="true">
+            <VideoView
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:id="@+id/videoView"
+                android:layout_below="@+id/layoutRight"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone"
+                ></VideoView>
+        </FrameLayout>
 
 
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/layoutRight"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp"
-        android:visibility="gone"/>
+
 
 </RelativeLayout>

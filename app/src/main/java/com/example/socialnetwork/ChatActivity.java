@@ -1,6 +1,7 @@
 package com.example.socialnetwork;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,11 +15,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.socialnetwork.Adapter.MessageAdapter;
@@ -56,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     CircleImageView profile_image;
     RecyclerView recyclerView;
     ImageView imageView;
+    VideoView videoView;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
@@ -76,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
 
     Intent intent;
     private static final int PICK_IMAGE=100;
+    private static final int PICK_VIDEO=100;
     private static String imagename;
     Uri imageUri;
 
@@ -159,6 +165,7 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        videoView=findViewById(R.id.videoView);
     }
 
     public void singin(){
@@ -229,22 +236,56 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void opengallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery,PICK_IMAGE);
+       /* Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery,PICK_IMAGE);*/
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("*/*");
+        startActivityForResult(galleryIntent, PICK_IMAGE);
+
+       /* Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*,video/*,audio/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Media"), CameraUtils.REQUEST_GALLERY);*/
+    }
+    private  void opengalleryvideo()
+    {
+        Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_VIDEO);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (resultCode== Activity.RESULT_OK && requestCode==PICK_IMAGE)
         {
+            String type=data.getType();
             imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-            imageView.setVisibility(View.VISIBLE);
-            Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
-            int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-            cursor.moveToFirst();
-            imagename= cursor.getString(nameIndex);
-            imagename= imagename.substring(0,imagename.length()-4);
+
+            ContentResolver cr = this.getContentResolver();
+            String mime = cr.getType(imageUri);
+            if(mime.equals("image/png")){
+                imageView.setImageURI(imageUri);
+                imageView.setVisibility(View.VISIBLE);
+                Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                cursor.moveToFirst();
+                imagename= cursor.getString(nameIndex);
+                imagename= imagename.substring(0,imagename.length()-4);
+            }
+            if(mime.equals("video/mp4")){
+                //imageView.setImageURI(imageUri);
+                videoView.setVisibility(View.VISIBLE);
+                Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                cursor.moveToFirst();
+                imagename= cursor.getString(nameIndex);
+                imagename= imagename.substring(0,imagename.length()-4);
+                videoView.setVideoURI(imageUri);
+                MediaController mediaController=new MediaController(this);
+                videoView.setMediaController(mediaController);
+                mediaController.setAnchorView(videoView);
+                videoView.start();
+            }
+
             //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
 
         }
@@ -284,6 +325,7 @@ public class ChatActivity extends AppCompatActivity {
                         message.setIdSender(idSender);
                         message.setMessage(_message);
                         message.setImage(Linkimage);
+                        message.setVideo("default");
 
 
                         databaseReference.child("Chats").push().setValue(message);
@@ -312,6 +354,63 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+        else if(videoView.getDrawableState()!=null){
+            videoView.setDrawingCacheEnabled(true);
+            videoView.buildDrawingCache();
+            final StorageReference mountainsRef = storageRef.child(imagename);
+            UploadTask uploadTask = mountainsRef.putFile(imageUri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return mountainsRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Linkimage = downloadUri.toString();
+
+                        databaseReference=FirebaseDatabase.getInstance().getReference();
+
+                        Message message=new Message();
+                        message.setIdReceiver(idReceive);
+                        message.setIdSender(idSender);
+                        message.setMessage(_message);
+                        message.setImage("default");
+                        message.setVideo(Linkimage);
+
+
+                        databaseReference.child("Chats").push().setValue(message);
+                        edt_Message.setText("");
+                        /*imageView.setVisibility(View.GONE);
+                        imageView.setImageDrawable(null);*/
+
+                        videoView.setVisibility(View.GONE);
+                        videoView.setVideoURI(null);
+
+                        /*String status = et_status.getText().toString();
+                        Post post = new Post();
+                        post.setAccount_name(displayname);
+                        post.setText(status);
+                        String id = mDatabase.push().getKey();
+                        post.setPost_id(id);
+                        if (videoView.getDrawableState()!=null) {
+                            post.setVideo(downloadUri.toString());
+                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
+                        }
+                        mDatabase.child("Post").child(id).setValue(post);*/
+                    }
+                }
+            });
+        }
         else
         {
             databaseReference=FirebaseDatabase.getInstance().getReference();
@@ -321,11 +420,13 @@ public class ChatActivity extends AppCompatActivity {
             message.setIdSender(idSender);
             message.setMessage(_message);
             message.setImage("default");
+            message.setVideo("default");
 
 
             databaseReference.child("Chats").push().setValue(message);
             edt_Message.setText("");
             imageView.setVisibility(View.GONE);
+            videoView.setVisibility(VideoView.GONE);
 
            /* String status = et_status.getText().toString();
             Post post = new Post();
@@ -336,5 +437,8 @@ public class ChatActivity extends AppCompatActivity {
             post.setComments(null);
             mDatabase.child("Post").child(id).setValue(post);*/
         }
+
+
     }
+
 }
