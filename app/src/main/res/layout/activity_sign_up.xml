@@ -18,7 +18,7 @@
             android:layout_height="180dp"
             android:layout_gravity="center"
             app:cardCornerRadius="30dp"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="10dp">
             <ImageView
                 android:layout_width="323dp"
                 android:layout_height="153dp"
@@ -28,11 +28,12 @@
                 android:tint="@android:color/white" />
         </android.support.v7.widget.CardView>
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/custom_avatar"
             android:layout_margin="10dp"
+            android:padding="5dp"
             android:id="@+id/avatar"/>
         <EditText
             android:layout_marginTop="10dp"

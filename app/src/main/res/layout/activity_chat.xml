@@ -53,38 +53,35 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/image"
             android:layout_height="40dp" />
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_toRightOf="@+id/btnImageSend"
-            android:layout_marginBottom="45dp"
-            android:layout_marginLeft="30dp"
-            android:visibility="gone"/>
-        <VideoView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/videoView"
-            android:layout_toRightOf="@+id/btnImageSend"
-            android:visibility="gone"
-            android:layout_marginBottom="45dp"
-            android:layout_marginLeft="30dp"
-            android:layout_centerInParent="true"
-            tools:ignore="WebViewLayout"></VideoView>
+
             <EditText
                 android:id="@+id/edt_Message"
                 android:layout_width="274dp"
                 android:layout_height="45dp"
-                android:layout_alignBottom="@+id/imageView"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="-50dp"
-                android:layout_toEndOf="@+id/btnImageSend"
                 android:layout_toRightOf="@+id/btnImageSend"
                 android:hint="Nhập tin nhắn ..."
-                android:paddingStart="10dp"
                 android:textColor="#000000" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/edt_Message"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="30dp"
+                android:visibility="gone"/>
+            <VideoView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:id="@+id/videoView"
+                android:visibility="gone"
+                android:layout_marginLeft="30dp"
+                android:layout_centerInParent="true"
+                tools:ignore="WebViewLayout"></VideoView>
+        </RelativeLayout>
 
             <ImageButton
                 android:id="@+id/btnSend"

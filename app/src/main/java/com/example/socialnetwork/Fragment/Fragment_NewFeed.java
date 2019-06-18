@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -149,12 +150,13 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
         loadpost();
         adapter= new StatusAdapter(view.getContext(),R.layout.status_row,dspost,Fragment_NewFeed.this);
         lv_listStatus.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
     private void opengallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
-    private  void opengalleryvideo()
+    private void opengalleryvideo()
     {
         Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_VIDEO);
@@ -194,6 +196,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
 
         }
     }
+
     public void uploadimage() {
         if (imageView.getDrawable()!=null) {
             imageView.setDrawingCacheEnabled(true);

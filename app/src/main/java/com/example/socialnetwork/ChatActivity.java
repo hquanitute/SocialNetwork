@@ -136,12 +136,12 @@ public class ChatActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!edt_Message.getText().toString().equals("")){
-                    sendMessage(senderAccount.getAccount_name(),receiverUsername,edt_Message.getText().toString());
-
+                if(edt_Message.getText().toString().equals("")&&!check&&imageView.getDrawable()==null){
+                    Toast.makeText(ChatActivity.this,"Chọn nội dung gửi tin nhắn!",Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Toast.makeText(ChatActivity.this,"Nhập nội dung tin nhắn!",Toast.LENGTH_LONG).show();
+                    sendMessage(senderAccount.getAccount_name(),receiverUsername,edt_Message.getText().toString());
+
                 }
             }
         });
@@ -255,7 +255,7 @@ public class ChatActivity extends AppCompatActivity {
 
             ContentResolver cr = this.getContentResolver();
             String mime = cr.getType(imageUri);
-            if(mime.equals("image/png")){
+            if(mime.equals("image/png")||mime.equals("image/jpeg")){
                 imageView.setImageURI(imageUri);
                 imageView.setVisibility(View.VISIBLE);
                 Cursor cursor = this.getContentResolver().query(imageUri, null, null, null, null);
@@ -279,9 +279,6 @@ public class ChatActivity extends AppCompatActivity {
                 videoView.start();
                 check=true;
             }
-
-            //Toast.makeText(getContext(),imagename.toString(),Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -326,21 +323,6 @@ public class ChatActivity extends AppCompatActivity {
                         edt_Message.setText("");
                         imageView.setVisibility(View.GONE);
                         imageView.setImageDrawable(null);
-
-                        // Log.d(TAG, "onComplete: Url: "+ downloadUri.toString());
-                        /*String status = et_status.getText().toString();
-                        Post post = new Post();
-                        post.setAccount_name(displayname);
-                        post.setText(status);
-                        String id = mDatabase.push().getKey();
-                        post.setPost_id(id);
-                        if (imageView.getDrawable() != null) {
-                            post.setImage(Linkimage);
-                            Toast.makeText(getContext(), "Co hinh ne", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "Ko co hinh", Toast.LENGTH_SHORT).show();
-                        }
-                        mDatabase.child("Post").child(id).setValue(post);*/
                     } else {
                         // Handle failures
                         // ...
