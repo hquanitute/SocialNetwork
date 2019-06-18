@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-16d30.appspot.com/");
     Account receiveAccount;
     Account senderAccount;
     String receiverUsername;

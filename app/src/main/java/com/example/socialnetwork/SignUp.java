@@ -49,7 +49,7 @@ public class SignUp extends AppCompatActivity {
     DatabaseReference databaseReference;
     boolean check=false;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-16d30.appspot.com/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

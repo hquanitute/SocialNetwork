@@ -51,7 +51,7 @@ public class Fragment_NewFeed extends Fragment implements EventListener {
     EditText et_status;
     Button btnPush;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-network-14488.appspot.com");
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://social-16d30.appspot.com/");
     ImageView imageView;
     Button btnimage,btnvideo;
     VideoView videoView;

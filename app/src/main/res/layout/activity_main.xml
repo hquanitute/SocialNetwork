@@ -39,7 +39,6 @@
             android:drawableTint="#FAFAFA"
             android:hint="Username"
             android:padding="10dp"
-            android:text="vophuc3@gmail.com"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white" />
 
@@ -55,7 +54,6 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="10dp"
-            android:text="123456"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white" />
 
